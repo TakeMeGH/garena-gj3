@@ -202,33 +202,40 @@ namespace GGJ.Code.SlotMachine
         {
             public GameObject Symbol;
             public int Index;
+            public int SymbolType;
         }
 
         public SymbolResult GetSymbolAtIndex(int gridIndex)
         {
-            if (_symbols == null || _symbols.Count == 0) return new SymbolResult { Symbol = null, Index = -1 };
+            if (_symbols == null || _symbols.Count == 0) return new SymbolResult { Symbol = null, Index = -1, SymbolType = -1 };
 
             int count = _symbols.Count;
             int wrappedGridIndex = (gridIndex % count + count) % count;
 
             return new SymbolResult
-                { Symbol = _symbols[wrappedGridIndex].SymbolTransform.gameObject, Index = wrappedGridIndex };
+            {
+                Symbol = _symbols[wrappedGridIndex].SymbolTransform.gameObject, 
+                Index = wrappedGridIndex,
+                SymbolType = _symbols[wrappedGridIndex].SymbolType
+            };
         }
 
         public SymbolResult GetCenterSymbol()
         {
-            if (_symbols == null || _symbols.Count == 0) return new SymbolResult { Symbol = null, Index = -1 };
+            if (_symbols == null || _symbols.Count == 0) return new SymbolResult { Symbol = null, Index = -1, SymbolType = -1 };
 
             float centerY = (topY + bottomY) / 2f;
             Transform closest = null;
             int closestGridIndex = -1;
+            int closestType = -1;
             float minDistance = float.MaxValue;
 
             bool isEven = (visibleSymbols + bufferSymbols) % 2 == 0;
 
             for (int i = 0; i < _symbols.Count; i++)
             {
-                Transform symbol = _symbols[i].SymbolTransform;
+                SymbolDataPerIndex data = _symbols[i];
+                Transform symbol = data.SymbolTransform;
                 float diff = symbol.localPosition.y - centerY;
                 float distance = Mathf.Abs(diff);
 
@@ -237,6 +244,7 @@ namespace GGJ.Code.SlotMachine
                     minDistance = distance;
                     closest = symbol;
                     closestGridIndex = i;
+                    closestType = data.SymbolType;
                 }
                 else if (isEven && Mathf.Abs(distance - minDistance) < 0.001f)
                 {
@@ -244,13 +252,14 @@ namespace GGJ.Code.SlotMachine
                     {
                         closest = symbol;
                         closestGridIndex = i;
+                        closestType = data.SymbolType;
                     }
                 }
             }
 
-            if (!closest) return new SymbolResult { Symbol = null, Index = -1 };
+            if (!closest) return new SymbolResult { Symbol = null, Index = -1, SymbolType = -1 };
 
-            return new SymbolResult { Symbol = closest.gameObject, Index = closestGridIndex };
+            return new SymbolResult { Symbol = closest.gameObject, Index = closestGridIndex, SymbolType = closestType };
         }
     }
 
@@ -281,17 +290,17 @@ namespace GGJ.Code.SlotMachine
             return symbolObject;
         }
 
-        void OnGet(GameObject symbol)
+        static void OnGet(GameObject symbol)
         {
             symbol.SetActive(true);
         }
 
-        void OnRelease(GameObject symbol)
+        static void OnRelease(GameObject symbol)
         {
             symbol.SetActive(false);
         }
 
-        void OnDestroyItem(GameObject symbol)
+        static void OnDestroyItem(GameObject symbol)
         {
             Object.Destroy(symbol);
         }

@@ -110,17 +110,36 @@ namespace GGJ.Code.SlotMachine
 
             Debug.Log("All reels stopped. Processing results...");
 
-            foreach (ReelSpinner reel in reels)
+            int[] offsets = new int[reels.Length];
+            ReelSpinner.SymbolResult[] finalResults = new ReelSpinner.SymbolResult[reels.Length];
+
+            for (int i = 0; i < reels.Length; i++)
             {
+                if (!reels[i]) continue;
+
+                ReelSpinner.SymbolResult centerResult = reels[i].GetCenterSymbol();
+                offsets[i] = Random.Range(-1, 2);
+                finalResults[i] = reels[i].GetSymbolAtIndex(centerResult.Index + offsets[i]);
+            }
+
+            for (int i = 0; i < reels.Length; i++)
+            {
+                ReelSpinner reel = reels[i];
                 if (!reel) continue;
 
-                ReelSpinner.SymbolResult centerResult = reel.GetCenterSymbol();
-                int offset = Random.Range(-1, 2);
-                ReelSpinner.SymbolResult offsetResult = reel.GetSymbolAtIndex(centerResult.Index + offset);
+                ReelSpinner.SymbolResult result = finalResults[i];
+                string symbolInfo = result.Symbol ? result.Symbol.name : "None";
 
-                string symbolInfo = offsetResult.Symbol ? offsetResult.Symbol.name : "None";
                 Debug.Log(
-                    $"Processing reel: {reel.gameObject.name}, Center Index: {centerResult.Index}, Offset: {offset}, Target Index: {offsetResult.Index}, Symbol: {symbolInfo}");
+                    $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
+
+                if (i + 2 < reels.Length && finalResults[i].SymbolType != -1 &&
+                    finalResults[i].SymbolType == finalResults[i + 1].SymbolType &&
+                    finalResults[i].SymbolType == finalResults[i + 2].SymbolType)
+                {
+                    Debug.Log("CRIT! Same symbol type detected on consecutive reels!");
+                }
+
                 yield return new WaitForSeconds(0.2f);
             }
 
