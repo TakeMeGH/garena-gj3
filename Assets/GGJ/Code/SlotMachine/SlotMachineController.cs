@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GGJ.Code.SlotMachine
 {
@@ -20,30 +21,40 @@ namespace GGJ.Code.SlotMachine
         [SerializeField]
         KeyCode stopKey = KeyCode.Return;
 
+        [SerializeField]
+        bool autoStart = true;
+
+        [SerializeField]
+        bool useInternalInput = true;
+
         bool _isSpinning;
         int _currentReelToStop;
         bool _isStopping;
 
-        void Update()
-        {
-            if (UnityEngine.Input.GetKeyDown(spinKey))
-            {
-                if (!_isSpinning)
-                {
-                    StartSpin();
-                }
-            }
+        public bool IsSpinning => _isSpinning;
+        public bool IsStopping => _isStopping;
 
-            if (UnityEngine.Input.GetKeyDown(stopKey))
+        public event System.Action OnProcessingStarted;
+
+        void Start()
+        {
+            if (autoStart)
             {
-                if (_isSpinning && _isStopping)
-                {
-                    StopNextReel();
-                }
+                StartSpin();
             }
         }
 
-        void StartSpin()
+        void Update()
+        {
+            if (!useInternalInput) return;
+
+            if (UnityEngine.Input.GetKeyDown(stopKey))
+            {
+                HandleStopInput();
+            }
+        }
+
+        public void StartSpin()
         {
             if (_isSpinning || reels == null || reels.Length == 0)
             {
@@ -51,6 +62,14 @@ namespace GGJ.Code.SlotMachine
             }
 
             StartCoroutine(SpinRoutine());
+        }
+
+        public void HandleStopInput()
+        {
+            if (_isSpinning && _isStopping)
+            {
+                StopNextReel();
+            }
         }
 
         void StopNextReel()
@@ -108,6 +127,8 @@ namespace GGJ.Code.SlotMachine
                 yield return null;
             }
 
+            OnProcessingStarted?.Invoke();
+
             Debug.Log("All reels stopped. Processing results...");
 
             int[] offsets = new int[reels.Length];
@@ -145,7 +166,11 @@ namespace GGJ.Code.SlotMachine
 
             _isSpinning = false;
             _isStopping = false;
-            StartSpin();
+
+            if (autoStart)
+            {
+                StartSpin();
+            }
         }
     }
 }
