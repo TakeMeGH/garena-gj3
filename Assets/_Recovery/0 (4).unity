@@ -1481,50 +1481,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1544856579102575742, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 1544856579102575742, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-    - target: {fileID: 2037464333191579908, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2472351688215037464, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 2472351688215037464, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-    - target: {fileID: 2561320864977444821, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3866329126207747050, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 3866329126207747050, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-    - target: {fileID: 4465732836429458732, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4565056620317707424, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5202913597132301780, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512304423030018027, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 7512304423030018027, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
     - target: {fileID: 8426971229905009783, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
       propertyPath: m_Name
       value: SlotMachine
       objectReference: {fileID: 0}
-    - target: {fileID: 9098929838748359274, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
-      propertyPath: serializationData.Prefab
-      value: 
-      objectReference: {fileID: 9098929838748359274, guid: eaf272dcce98c8e4da2cd30c02557dd7, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

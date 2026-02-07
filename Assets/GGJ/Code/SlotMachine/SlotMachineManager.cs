@@ -79,14 +79,14 @@ namespace GGJ.Code.SlotMachine
 
         void RestartAllMachine()
         {
-            Invoke(nameof(DelayStartSpinSFX), 0.25f);
+            Invoke(nameof(DelayStartSpinSfx), 0.25f);
             foreach (SlotMachineController machine in machines)
             {
                 machine.StartSpin();
             }
         }
 
-        void DelayStartSpinSFX()
+        void DelayStartSpinSfx()
         {
             AudioManager.Instance.PlaySfx("StartSlot");
             AudioManager.Instance.PlayLoopedSfx("SlotMachineRolling");
