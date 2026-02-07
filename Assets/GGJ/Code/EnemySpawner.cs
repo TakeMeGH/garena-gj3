@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
+using Mono.CSharp;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class EnemySpawner : MonoBehaviour
     public float spawnMaxRange = 30f; // because crowded may overflow to the side
 
     private GameObject player;
+    
+    public static int currentWave = 1; // accessed by Player.cs when death
 
     void Start()
     {
@@ -29,6 +32,8 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWave(int waveNumber)
     {
+        currentWave = waveNumber;
+
         waveText.text = "Wave: " + waveNumber.ToString();
 
 
@@ -74,6 +79,9 @@ public class EnemySpawner : MonoBehaviour
 
         Debug.Log($"Wave {waveNumber} complete. Waiting for next wave...");
         yield return new WaitForSeconds(5f);
+
+        if (player == null) yield break; // player has died
+
         yield return StartCoroutine(SpawnWave(waveNumber + 1));
     }
 

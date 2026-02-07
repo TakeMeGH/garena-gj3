@@ -5,11 +5,14 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEditor.ShaderGraph.Internal;
 using System;
+using GGJ.Code.Utils.LevelManager;
 
 
 public class Player : MonoBehaviour
 {
     public GameObject particle;
+    public Animator gameOverPanel;
+    public TMP_Text waveReached;
     public Animator animator;
     
     public TMP_Text coinText;
@@ -90,15 +93,6 @@ public class Player : MonoBehaviour
         //
         //     MagicWand();
         // }
-    }
-    public void TakeDamage(float damage)
-    {
-        health -= damage;
-        healthBar.value = health;
-        if (health <= 0)
-        {
-            Destroy(gameObject);
-        }
     }
     void OnDrawGizmosSelected()
     {
@@ -208,9 +202,21 @@ public class Player : MonoBehaviour
         {
             coin += 1;
             coinText.text = "Coin: " + coin.ToString();
+            
             Destroy(col.gameObject);
         }
     }
 
     
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        healthBar.value = health;
+        if (health <= 0)
+        {
+            gameOverPanel.Play("gameOverShow");
+            waveReached.text = "Wave Reached: " + EnemySpawner.currentWave.ToString();
+            Destroy(gameObject);
+        }
+    }
 }
