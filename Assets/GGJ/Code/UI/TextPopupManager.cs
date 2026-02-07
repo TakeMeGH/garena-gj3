@@ -12,9 +12,9 @@ namespace GGJ.Code.UI
         [SerializeField]
         MMF_Player criticalTextFeedback;
 
-        public void CreateDamagePopup(Vector3 position, int damageAmount)
+        public void CreateDamagePopup(Vector3 position, float damageAmount)
         {
-            floatingTextFeedback.PlayFeedbacks(position, Mathf.Abs(damageAmount));
+            floatingTextFeedback.PlayFeedbacks(position, damageAmount);
         }
 
         public void CreateCriticalPopup(Vector3 position)
