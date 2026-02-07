@@ -1,9 +1,14 @@
 fileFormatVersion: 2
-guid: 70129aee0f15d0544a8a9d492b2be232
+guid: 4510867c0208c284badf19e4d9106e9e
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
   externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Unlit
+    second: {fileID: 2100000, guid: 291749763bd63f84aa53ed4f7eb74c86, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
