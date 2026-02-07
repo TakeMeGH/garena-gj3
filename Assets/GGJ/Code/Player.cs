@@ -1,32 +1,46 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
+using System;
+
 
 public class Player : MonoBehaviour
 {
     public GameObject particle;
     public Animator animator;
     
+    public TMP_Text coinText;
     public Slider healthBar;
-
-    public float health = 10f;
-    public float whipDamage = 2f;
-    public float speed = 5f;
-
     public InputActionReference move;
     public InputActionReference interact;
 
+    public float health = 10f;
+    public float speed = 5f;
     public float moveMaxRange = 40f;
 
-    private Vector2 _moveDirection;
 
+    [Header("Attack Settings")]
 
     public GameObject[] whipAtkAreas;
-    public float whipAtkRadius;
+    public float whipDamage = 4f;
+    public float whipAtkRadius = 1.5f;
+
+    public float garlicDamage = 4f;
+    public float garlicAtkRadius = 3f;
+
+    public GameObject wandBullet;
+    public float magicWandDamage = 3f;
+
+
+
+    
+    private Vector2 _moveDirection;
     private float whipDelay = 1f;
     private float whipTimer;
+    private int coin;
 
     void Start()
     {
@@ -45,19 +59,11 @@ public class Player : MonoBehaviour
         if (_moveDirection != Vector2.zero)
         {
             animator.SetBool("isWalking", true);
-
-            // Calculate the angle in radians using Atan2, which handles all quadrants correctly
-            float angleRadians = Mathf.Atan2(_moveDirection.y, _moveDirection.x);
-
-            // Convert the angle from radians to degrees
-            float angleDegrees = - angleRadians * Mathf.Rad2Deg;
-
-            // Create a Quaternion rotation around the Z-axis (forward direction for 2D)
-            // Note: If your sprite's "forward" is actually 'up', you may need to adjust the angle (e.g., subtract 90 degrees)
-            Quaternion targetRotation = Quaternion.AngleAxis(angleDegrees, Vector3.up);
-
-            // Apply the rotation to the GameObject's transform
-            transform.rotation = targetRotation;
+            Vector3 moveDir3D = new Vector3(_moveDirection.x, 0, _moveDirection.y);
+            if (moveDir3D.sqrMagnitude > 0.001f)
+            {
+                transform.rotation = Quaternion.LookRotation(moveDir3D, Vector3.up);
+            }
         } else {
             animator.SetBool("isWalking", false);
         }
@@ -71,27 +77,7 @@ public class Player : MonoBehaviour
         {
             whipTimer = whipDelay;
 
-            // whip
-            Instantiate(particle, transform.position, Quaternion.identity);
-
-            // Collect all unique enemies in whip attack areas
-            HashSet<Enemy> enemies = new HashSet<Enemy>();
-            foreach (GameObject atkArea in whipAtkAreas)
-            {
-                Collider[] colliders = Physics.OverlapSphere(atkArea.transform.position, whipAtkRadius);
-                foreach (Collider col in colliders)
-                {
-                    Enemy enemy = col.GetComponent<Enemy>();
-                    if (enemy != null)
-                    {
-                        enemies.Add(enemy);
-                    }
-                }
-            }
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.TakeDamage(whipDamage, (enemy.transform.position - transform.position).normalized * 10f); // atk damage & knockback
-            }
+            MagicWand();
         }
     }
     public void TakeDamage(float damage)
@@ -113,6 +99,89 @@ public class Player : MonoBehaviour
             {
                 Gizmos.DrawWireSphere(atkArea.transform.position, whipAtkRadius);
             }
+        }
+        Gizmos.DrawWireSphere(transform.position, garlicAtkRadius);
+    }
+
+    void Whip()
+    {
+        // whip
+        GameObject a = Instantiate(particle, transform.position + transform.right * 2f, Quaternion.identity);
+        Destroy(a, 3);
+        a = Instantiate(particle, transform.position + transform.right * 4f, Quaternion.identity);
+        Destroy(a, 3);
+        a = Instantiate(particle, transform.position + transform.right * 6f, Quaternion.identity);
+        Destroy(a, 3);
+
+        // Collect all unique enemies in whip attack areas
+        HashSet<Enemy> enemies = new HashSet<Enemy>();
+        foreach (GameObject atkArea in whipAtkAreas)
+        {
+            Collider[] colliders = Physics.OverlapSphere(atkArea.transform.position, whipAtkRadius);
+            foreach (Collider col in colliders)
+            {
+                Enemy enemy = col.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemies.Add(enemy);
+                }
+            }
+        }
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.TakeDamage(whipDamage, (enemy.transform.position - transform.position).normalized * 10f); // atk damage & knockback
+        }
+    }
+
+    void Garlic()
+    {
+        GameObject a = Instantiate(particle, transform.position, Quaternion.identity);
+        Destroy(a, 3);
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, garlicAtkRadius);
+        foreach (Collider col in colliders)
+        {
+            Enemy enemy = col.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(garlicDamage, (enemy.transform.position - transform.position).normalized * 10f); // atk damage & knockback
+            }
+        }
+    }
+
+    void MagicWand()
+    {
+        // Find nearest enemy
+        Enemy nearestEnemy = null;
+        float minDist = float.MaxValue;
+        foreach (Enemy enemy in Enemy.allEnemies)
+        {
+            if (enemy == null) continue;
+            float dist = Vector3.Distance(transform.position, enemy.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearestEnemy = enemy;
+            }
+        }
+
+        if (nearestEnemy != null)
+        {
+            print("nearest: " + nearestEnemy.name);
+            Vector3 dir = (nearestEnemy.transform.position - transform.position).normalized;
+            Quaternion bulletRotation = Quaternion.LookRotation(dir, Vector3.up);
+            GameObject instantiatedWandBullet = Instantiate(wandBullet, transform.position, bulletRotation);
+            instantiatedWandBullet.GetComponent<WandBullet>().damage = magicWandDamage;
+        }
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.CompareTag("Coin"))
+        {
+            coin += 1;
+            coinText.text = "Coin: " + coin.ToString();
+            Destroy(col.gameObject);
         }
     }
 }

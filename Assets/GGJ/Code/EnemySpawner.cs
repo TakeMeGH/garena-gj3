@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using Mono.CSharp;
+using TMPro;
 
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyBatSolo;
     public GameObject enemyBatCrowd;
     public GameObject enemyZombie;
+
+    public TMP_Text waveText;
 
     public float spawnMaxRange = 30f; // because crowded may overflow to the side
 
@@ -27,6 +29,9 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWave(int waveNumber)
     {
+        waveText.text = "Wave: " + waveNumber.ToString();
+
+
         int batSoloCount = 5;
         int batCrowdCount = 1; Mathf.Max(0, -2 + 2 * waveNumber);
         int zombieCount = 1; Mathf.Clamp(-6 + 3 * waveNumber, 0, 1000);

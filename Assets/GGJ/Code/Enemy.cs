@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public static List<Enemy> allEnemies = new List<Enemy>();
+
+    public GameObject coin;
     public float health = 10f;
     public float damage = 2f;
     public float speed = 5f;
@@ -22,6 +25,8 @@ public class Enemy : MonoBehaviour
     private Rigidbody rb;
     void Start()
     {
+        allEnemies.Add(this);
+
         player = GameObject.FindWithTag("Player");
         rb = GetComponent<Rigidbody>();
     }
@@ -77,6 +82,13 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
+            
+            Instantiate(coin, transform.position, Quaternion.identity);
         }
+    }
+
+    void Oestroy()
+    {
+        allEnemies.Remove(this);
     }
 }
