@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,26 +8,14 @@ namespace GGJ.Code.SlotMachine
     public class SlotMachineController : MonoBehaviour
     {
         [SerializeField]
-        ReelSpinner[] reels;
+        ReelController[] reels;
 
         [SerializeField]
         float startDelay = 0.1f;
 
         [SerializeField]
         float stopDelay = 0.25f;
-
-        [SerializeField]
-        KeyCode spinKey = KeyCode.Space;
-
-        [SerializeField]
-        KeyCode stopKey = KeyCode.Return;
-
-        [SerializeField]
-        bool autoStart = true;
-
-        [SerializeField]
-        bool useInternalInput = true;
-
+        
         bool _isSpinning;
         int _currentReelToStop;
         bool _isStopping;
@@ -34,31 +23,21 @@ namespace GGJ.Code.SlotMachine
         public bool IsSpinning => _isSpinning;
         public bool IsStopping => _isStopping;
 
-        public event System.Action OnProcessingStarted;
+        public event System.Action<SlotMachineController> OnProcessingStarted;
+        public event System.Action<SlotMachineController> OnProcessingCompleted;
 
-        void Start()
-        {
-            if (autoStart)
-            {
-                StartSpin();
-            }
-        }
-
-        void Update()
-        {
-            if (!useInternalInput) return;
-
-            if (UnityEngine.Input.GetKeyDown(stopKey))
-            {
-                HandleStopInput();
-            }
-        }
-
+        List<SymbolController> _outlinedSymbol = new();
+        
         public void StartSpin()
         {
             if (_isSpinning || reels == null || reels.Length == 0)
             {
                 return;
+            }
+
+            foreach (SymbolController symbolController in _outlinedSymbol)
+            {
+                symbolController.EnableOutline(false);
             }
 
             StartCoroutine(SpinRoutine());
@@ -95,7 +74,7 @@ namespace GGJ.Code.SlotMachine
             _isStopping = false;
             _currentReelToStop = 0;
 
-            foreach (ReelSpinner t in reels)
+            foreach (ReelController t in reels)
             {
                 if (t)
                 {
@@ -117,7 +96,7 @@ namespace GGJ.Code.SlotMachine
             while (anySpinning)
             {
                 anySpinning = false;
-                foreach (ReelSpinner reel in reels)
+                foreach (ReelController reel in reels)
                 {
                     if (!reel || !reel.IsSpinning) continue;
                     anySpinning = true;
@@ -127,29 +106,34 @@ namespace GGJ.Code.SlotMachine
                 yield return null;
             }
 
-            OnProcessingStarted?.Invoke();
+            OnProcessingStarted?.Invoke(this);
 
             Debug.Log("All reels stopped. Processing results...");
 
             int[] offsets = new int[reels.Length];
-            ReelSpinner.SymbolResult[] finalResults = new ReelSpinner.SymbolResult[reels.Length];
+            ReelController.SymbolResult[] finalResults = new ReelController.SymbolResult[reels.Length];
 
             for (int i = 0; i < reels.Length; i++)
             {
                 if (!reels[i]) continue;
 
-                ReelSpinner.SymbolResult centerResult = reels[i].GetCenterSymbol();
+                ReelController.SymbolResult centerResult = reels[i].GetCenterSymbol();
                 offsets[i] = Random.Range(-1, 2);
                 finalResults[i] = reels[i].GetSymbolAtIndex(centerResult.Index + offsets[i]);
             }
 
             for (int i = 0; i < reels.Length; i++)
             {
-                ReelSpinner reel = reels[i];
+                ReelController reel = reels[i];
                 if (!reel) continue;
 
-                ReelSpinner.SymbolResult result = finalResults[i];
+                ReelController.SymbolResult result = finalResults[i];
                 string symbolInfo = result.Symbol ? result.Symbol.name : "None";
+                if (result.Symbol && result.Symbol.TryGetComponent(out SymbolController symbolController))
+                {
+                    symbolController.EnableOutline(true);
+                    _outlinedSymbol.Add(symbolController);
+                }
 
                 Debug.Log(
                     $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
@@ -167,10 +151,8 @@ namespace GGJ.Code.SlotMachine
             _isSpinning = false;
             _isStopping = false;
 
-            if (autoStart)
-            {
-                StartSpin();
-            }
+            OnProcessingCompleted?.Invoke(this);
         }
+
     }
 }

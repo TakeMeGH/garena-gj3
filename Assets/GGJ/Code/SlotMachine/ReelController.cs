@@ -6,7 +6,7 @@ using UnityEngine.Pool;
 
 namespace GGJ.Code.SlotMachine
 {
-    public class ReelSpinner : MonoBehaviour
+    public class ReelController : MonoBehaviour
     {
         [Header("Layout")]
         [SerializeField]

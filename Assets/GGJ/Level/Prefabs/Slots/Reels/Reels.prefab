@@ -30,12 +30,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 494511493842344375}
-  - {fileID: 5223502212235247460}
-  - {fileID: 2838152647835876767}
-  - {fileID: 1778358964299770702}
-  - {fileID: 324247082559600699}
-  - {fileID: 8291643230880010575}
+  - {fileID: 2847604010331124409}
+  - {fileID: 1750101484599305320}
+  - {fileID: 331130063195944733}
+  - {fileID: 8355947106765430377}
+  - {fileID: 449031324125550225}
+  - {fileID: 5231502298301820994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4914832429342059038
@@ -56,9 +56,9 @@ MonoBehaviour:
   visibleSymbols: 3
   bufferSymbols: 3
   symbolPrefabs:
-  - {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
-  - {fileID: 1341797136354365303, guid: f735529be1d904144b5ce6e32603c156, type: 3}
-  - {fileID: 5762172613086773625, guid: c3779bc28156f074bbc3ea9805f604f6, type: 3}
+  - {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  - {fileID: 1484464367056209424, guid: 26aa68e4274a98b418123ac08a8ac154, type: 3}
+  - {fileID: 9180836417298069100, guid: 584c88b15cbdb37408fa897e6e12939e, type: 3}
   spinSpeed: 8
   stopDuration: 0.1
 --- !u!1001 &1809077080137376593
@@ -109,6 +109,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
       propertyPath: m_Name
       value: GarlicReels (2)
@@ -122,9 +126,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
---- !u!4 &2838152647835876767 stripped
+--- !u!4 &2847604010331124409 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4501355314564882126, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4512495528522551784, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
   m_PrefabInstance: {fileID: 1809077080137376593}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2798431646507660672
@@ -175,6 +179,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
       propertyPath: m_Name
       value: GarlicReels (3)
@@ -188,9 +196,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
---- !u!4 &1778358964299770702 stripped
+--- !u!4 &1750101484599305320 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4501355314564882126, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4512495528522551784, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
   m_PrefabInstance: {fileID: 2798431646507660672}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4081630542324746105
@@ -241,6 +249,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
       propertyPath: m_Name
       value: GarlicReels
@@ -254,9 +266,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
---- !u!4 &494511493842344375 stripped
+--- !u!4 &449031324125550225 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4501355314564882126, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4512495528522551784, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
   m_PrefabInstance: {fileID: 4081630542324746105}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4181578853096826613
@@ -307,6 +319,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
       propertyPath: m_Name
       value: GarlicReels (4)
@@ -320,9 +336,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
---- !u!4 &324247082559600699 stripped
+--- !u!4 &331130063195944733 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4501355314564882126, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4512495528522551784, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
   m_PrefabInstance: {fileID: 4181578853096826613}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5578221994032549761
@@ -373,6 +389,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
       propertyPath: m_Name
       value: GarlicReels (5)
@@ -386,9 +406,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
---- !u!4 &8291643230880010575 stripped
+--- !u!4 &8355947106765430377 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4501355314564882126, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4512495528522551784, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
   m_PrefabInstance: {fileID: 5578221994032549761}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8504376477067469226
@@ -439,6 +459,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8416856988072358817, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8908851152376375397, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
       propertyPath: m_Name
       value: GarlicReels (1)
@@ -452,8 +476,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
---- !u!4 &5223502212235247460 stripped
+--- !u!4 &5231502298301820994 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4501355314564882126, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4512495528522551784, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
   m_PrefabInstance: {fileID: 8504376477067469226}
   m_PrefabAsset: {fileID: 0}
