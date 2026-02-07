@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using Mono.CSharp;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -11,8 +12,11 @@ public class EnemySpawner : MonoBehaviour
 
     public float spawnMaxRange = 30f; // because crowded may overflow to the side
 
+    private GameObject player;
+
     void Start()
     {
+        player = GameObject.FindWithTag("Player");
         StartCoroutine(SpawnWave(1));
     }
 
@@ -23,7 +27,7 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWave(int waveNumber)
     {
-        int batSoloCount = 0; //5;
+        int batSoloCount = 5;
         int batCrowdCount = 1; Mathf.Max(0, -2 + 2 * waveNumber);
         int zombieCount = 1; Mathf.Clamp(-6 + 3 * waveNumber, 0, 1000);
 
@@ -70,11 +74,17 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy(int enemyType)
     {
-        Vector3 spawnPos = new Vector3(
+        if (player == null) return; // if player is dead, can't spawn enemy (player's pos is needed to spawn enemies far away)
+        Vector3 spawnPos;
+        do
+        {
+            spawnPos = new Vector3(
             UnityEngine.Random.Range(-spawnMaxRange, spawnMaxRange),
             0,
             UnityEngine.Random.Range(-spawnMaxRange, spawnMaxRange)
-        );
+            );
+        } while (Mathf.Pow(spawnPos.x - player.transform.position.x, 2) + Mathf.Pow(spawnPos.z - player.transform.position.z, 2) < 10f); // far away from player
+        
 
 
         switch (enemyType)
@@ -88,7 +98,8 @@ public class EnemySpawner : MonoBehaviour
                     for (int j = -2; j < 3; j++)
                     {
                         GameObject a = SpawnEnemyIndividually(enemyBatCrowd, spawnPos + new Vector3(i, 0, j) * 1f);
-                        Vector3 targetPos = new Vector3((spawnPos.x > 0) ? -spawnMaxRange : spawnMaxRange, 0, (spawnPos.z > 0) ? -spawnMaxRange : spawnMaxRange);
+                        
+                        Vector3 targetPos = spawnPos + 2 * spawnMaxRange * (player.transform.position - spawnPos).normalized;
                         a.GetComponent<Enemy>().SetTarget(targetPos);
                     }
                 }

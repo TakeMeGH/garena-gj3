@@ -125,6 +125,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyZombie
       objectReference: {fileID: 0}
+    - target: {fileID: 3914452750064268318, guid: ff7adf4c4fe480341901963c0d32d361, type: 3}
+      propertyPath: m_Constraints
+      value: 84
+      objectReference: {fileID: 0}
     - target: {fileID: 5688813583848813427, guid: ff7adf4c4fe480341901963c0d32d361, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.71826
