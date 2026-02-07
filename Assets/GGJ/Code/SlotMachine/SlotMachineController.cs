@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GGJ.Code.Ability;
 using GGJ.Code.Audio;
-using GGJ.Code.UI;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace GGJ.Code.SlotMachine
 {
@@ -26,11 +25,12 @@ namespace GGJ.Code.SlotMachine
 
         public bool IsSpinning => _isSpinning;
         public bool IsStopping => _isStopping;
+        public int LastCalculatedDamage { get; private set; }
 
-        public event System.Action<SlotMachineController> OnProcessingStarted;
-        public event System.Action<SlotMachineController> OnProcessingCompleted;
+        public event Action<SlotMachineController> OnProcessingStarted;
+        public event Action<SlotMachineController> OnProcessingCompleted;
 
-        List<SymbolController> _outlinedSymbol = new();
+        readonly List<SymbolController> _outlinedSymbol = new();
 
         public void StartSpin()
         {
@@ -111,64 +111,28 @@ namespace GGJ.Code.SlotMachine
             }
 
             OnProcessingStarted?.Invoke(this);
-
+            LastCalculatedDamage = 0;
             Debug.Log("All reels stopped. Processing results...");
 
-            int[] offsets = new int[reels.Length];
             ReelController.SymbolResult[] finalResults = new ReelController.SymbolResult[reels.Length];
-
-            for (int i = 0; i < reels.Length; i++)
+            for (int j = 0; j < reels[0].VisibleSymbols; j++)
             {
-                if (!reels[i]) continue;
-
-                ReelController.SymbolResult centerResult = reels[i].GetCenterSymbol();
-                offsets[i] = Random.Range(-1, 2);
-                finalResults[i] = reels[i].GetSymbolAtIndex(centerResult.Index + offsets[i]);
-            }
-
-            for (int i = 0; i < reels.Length; i++)
-            {
-                ReelController reel = reels[i];
-                if (!reel) continue;
-
-                ReelController.SymbolResult result = finalResults[i];
-                if (result.Symbol && result.Symbol.TryGetComponent(out SymbolController symbolController))
+                for (int i = 0; i < reels.Length; i++)
                 {
+                    if (!reels[i]) continue;
+
+                    finalResults[i] = reels[i].GetSymbolAtIndex(j);
+                    ReelController.SymbolResult result = finalResults[i];
+                    if (!result.Symbol || !result.Symbol.TryGetComponent(out SymbolController symbolController))
+                        continue;
                     symbolController.EnableOutline(true);
                     _outlinedSymbol.Add(symbolController);
-                    switch (symbolController.SymbolType)
-                    {
-                        case SymbolType.Whip:
-                            GetPlayer().Whip();
-                            break;
-                        case SymbolType.MagicWand:
-                            GetPlayer().MagicWand();
-                            break;
-                        case SymbolType.Garlic:
-                            GetPlayer().Garlic();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    AudioManager.Instance.PlaySfx("CoinDrop");
+                    yield return new WaitForSeconds(0.2f);
                 }
 
-                // AudioManager.Instance.PlaySfx("ButtonStop");
-                AudioManager.Instance.PlaySfx("CoinDrop");
-
-                // Debug.Log(
-                //     $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
-
-                if (i + 2 < reels.Length && finalResults[i].SymbolType != -1 &&
-                    finalResults[i].SymbolType == finalResults[i + 1].SymbolType &&
-                    finalResults[i].SymbolType == finalResults[i + 2].SymbolType)
-                {
-                    Debug.Log("CRIT! Same symbol type detected on consecutive reels!");
-                    TextPopupManager.Instance.CreateCriticalPopup(finalResults[i].Symbol.transform.position +
-                                                                  new Vector3(0, -0.5f, -0.5f));
-                    AudioManager.Instance.PlaySfx("CriticalHit");
-                }
-
-                yield return new WaitForSeconds(0.2f);
+                LastCalculatedDamage += CalculateDamageFromRow(finalResults);
+                Debug.Log($"Slot row damage: {LastCalculatedDamage}");
             }
 
             _isSpinning = false;
@@ -177,11 +141,82 @@ namespace GGJ.Code.SlotMachine
             OnProcessingCompleted?.Invoke(this);
         }
 
-        Player GetPlayer()
+        int CalculateDamageFromRow(ReelController.SymbolResult[] results)
         {
-            if (_player != null) return _player;
-            _player = FindObjectOfType<Player>();
-            return _player;
+            if (results == null || results.Length == 0) return 0;
+
+            int totalDamage = 0;
+            int runDamage = 0;
+            int runLength = 0;
+            AbilityCardType previousType = AbilityCardType.None;
+            bool hasPrevious = false;
+
+            foreach (ReelController.SymbolResult result in results)
+            {
+                if (result.SymbolType < 0)
+                {
+                    if (runLength > 0)
+                    {
+                        totalDamage += runDamage * runLength;
+                    }
+
+                    runDamage = 0;
+                    runLength = 0;
+                    hasPrevious = false;
+                    continue;
+                }
+
+                int damage = GetSymbolDamage(result);
+                if (!hasPrevious || result.SymbolType != previousType)
+                {
+                    runDamage += damage;
+                    runLength++;
+                }
+                else
+                {
+                    totalDamage += runDamage * runLength;
+                    runDamage = damage;
+                    runLength = 1;
+                }
+                runLength += GetExtraMultiplier(result);
+
+                previousType = result.SymbolType;
+                hasPrevious = true;
+            }
+
+            if (runLength > 0)
+            {
+                totalDamage += runDamage * runLength;
+            }
+
+            Debug.Log("Run damage: " + runDamage + " Run length: " + runLength + " Total damage: " + totalDamage + "");
+
+            return totalDamage;
         }
+
+        static int GetSymbolDamage(ReelController.SymbolResult result)
+        {
+            if (result.Symbol &&
+                result.Symbol.TryGetComponent(out SymbolController symbolController) &&
+                symbolController.AbilityData)
+            {
+                return symbolController.AbilityData.Damage;
+            }
+
+            return 0;
+        }
+        
+        static int GetExtraMultiplier(ReelController.SymbolResult result)
+        {
+            if (result.Symbol &&
+                result.Symbol.TryGetComponent(out SymbolController symbolController) &&
+                symbolController.AbilityData)
+            {
+                return symbolController.AbilityData.ExtraMultiplier;
+            }
+
+            return 0;
+        }
+
     }
 }

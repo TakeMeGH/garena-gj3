@@ -33,19 +33,19 @@ namespace GGJ.Code.UI
 
             if (iconImage) iconImage.sprite = data.Icon;
             if (nameText) nameText.text = data.AbilityName;
-            if (levelText) levelText.text = $"Level: {data.AbilityLevel} -> Level: {data.AbilityLevel - 1}";
+            if (levelText) levelText.text = $"{data.AbilityRarity.ToString()}";
             if (descriptionText)
             {
                 string desc = data.Description;
-                if (data.DynamicValues != null)
-                {
-                    for (int i = 0; i < data.DynamicValues.Length; i++)
-                    {
-                        desc = desc.Replace("{x" + i + "}", data.DynamicValues[i].OldValue.ToString("F1"));
-                        desc = desc.Replace("{y" + i + "}", data.DynamicValues[i].NewValue.ToString("F1"));
-
-                    }
-                }
+                // if (data.DynamicValues != null)
+                // {
+                //     for (int i = 0; i < data.DynamicValues.Length; i++)
+                //     {
+                //         desc = desc.Replace("{x" + i + "}", data.DynamicValues[i].OldValue.ToString("F1"));
+                //         desc = desc.Replace("{y" + i + "}", data.DynamicValues[i].NewValue.ToString("F1"));
+                //
+                //     }
+                // }
                 descriptionText.text = desc;
             }
 

@@ -2,9 +2,30 @@
 
 namespace GGJ.Code.Ability
 {
+    public enum AbilityCardType
+    {
+        None,
+        Common1,
+        Common2,
+        Common3,
+        Uncommon1 = 100,
+        Uncommon2,
+        Rare1 = 200
+    }
+
+    public enum AbilityRarity
+    {
+        Common,
+        Uncommon,
+        Rare
+    }
+
     [CreateAssetMenu(fileName = "NewSharedAbilityData", menuName = "GGJ/Ability/SharedAbilityData")]
     public class SharedAbilityData : ScriptableObject
     {
+        [SerializeField]
+        AbilityCardType cardType;
+
         [SerializeField]
         Sprite icon;
 
@@ -12,26 +33,23 @@ namespace GGJ.Code.Ability
         string abilityName;
 
         [SerializeField]
-        int abilityLevel;
+        AbilityRarity abilityRarity;
 
         [SerializeField, TextArea]
         string description;
 
-        [Header("Dynamic Values (Optional)")]
         [SerializeField]
-        DescriptionValueData[] dynamicValues;
+        int damage;
+
+        [SerializeField]
+        int extraMultiplier;
 
         public Sprite Icon => icon;
         public string AbilityName => abilityName;
-        public int AbilityLevel => abilityLevel;
+        public AbilityRarity AbilityRarity => abilityRarity;
         public string Description => description;
-        public DescriptionValueData[] DynamicValues => dynamicValues;
-    }
-
-    [System.Serializable]
-    public class DescriptionValueData
-    {
-        public float OldValue;
-        public float NewValue;
+        public int Damage => damage;
+        public int ExtraMultiplier => extraMultiplier;
+        public AbilityCardType CardType => cardType;
     }
 }

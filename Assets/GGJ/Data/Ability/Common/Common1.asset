@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44e0aee62299472880e20dabb3bbbb44, type: 3}
-  m_Name: WhipAbilityData
+  m_Name: Common1
   m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.Ability.SharedAbilityData
-  icon: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
-  abilityName: Whip
-  abilityLevel: 10
-  description: Reduce whip damage from {x0} to {y0} and reduce whip range from {x1}
-    to {y1}
-  dynamicValues:
-  - OldValue: 10
-    NewValue: 5
-  - OldValue: 12
-    NewValue: 6
+  cardType: 1
+  icon: {fileID: 2125737359283935466, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  abilityName: Common1
+  abilityRarity: 0
+  description: Reduce garlic damage from {x0} to {y0} and reduce garlic range from
+    {x1} to {y1}
+  damage: 10
+  extraMultiplier: 0

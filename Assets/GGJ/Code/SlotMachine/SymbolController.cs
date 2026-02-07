@@ -1,20 +1,13 @@
-﻿using UnityEngine;
+﻿using GGJ.Code.Ability;
+using UnityEngine;
 
 namespace GGJ.Code.SlotMachine
 {
-    public enum SymbolType
-    {
-        Whip,
-        MagicWand,
-        Garlic
-    }
-
     public class SymbolController : MonoBehaviour
     {
-        [SerializeField]
         public GameObject Outline;
 
-        public SymbolType SymbolType;
+        public SharedAbilityData AbilityData;
 
         void Start()
         {

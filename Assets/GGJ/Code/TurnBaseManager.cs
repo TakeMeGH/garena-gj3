@@ -1,22 +1,22 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Mono.CSharp;
-using UnityEngine;
+using GGJ.Code.SlotMachine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class TurnBaseManager : MonoBehaviour
 {
     public Animator gameOverPanel;
     public TMP_Text waveReachedText;
+
     [System.Serializable]
     public class Enemy
     {
         public bool isZombiebot = false;
         public float health = 10;
         public float damage = 3;
-
     }
+
     public Enemy[] enemies;
 
     public float playerHealth = 10f;
@@ -26,25 +26,35 @@ public class TurnBaseManager : MonoBehaviour
     public GameObject batbotPrefab;
     public GameObject zombotPrefab;
     public Transform enemyParent;
-    
+
+    [SerializeField]
+    SlotMachineManager slotMachineManager;
+
+    [SerializeField]
+    Slider playerHealthBar;
+
+    [SerializeField]
+    Slider enemyHealthBar;
 
 
     private GameObject instantiatedEnemy;
     private int wave = 1;
     private bool playerTurnDone = false; // temporary to wait until player done attacking from slot
-    
+    private float playerMaxHealth;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerMaxHealth = playerHealth;
 
         // Instantiate enemy
-        if (wave >= enemies.Length)
+        if (wave > enemies.Length)
         {
             return;
         }
-        GameObject instantiatedEnemy = Instantiate((enemies[wave-1].isZombiebot) ? zombotPrefab : batbotPrefab, enemyParent);
-        enemyHealth = enemies[wave-1].health;
+        SpawnEnemyForWave();
+        UpdatePlayerHealthUI();
 
         // Start turn base loop
         StartCoroutine(PlayerTurn());
@@ -52,17 +62,40 @@ public class TurnBaseManager : MonoBehaviour
 
     IEnumerator PlayerTurn()
     {
-        //yield return new WaitUntil(() => playerTurnDone); // TODO: replace with slot mechanic
-        //playerTurnDone = false;
-        yield return new WaitForSeconds(5f);
-        
+        if (wave > enemies.Length)
+        {
+            yield break;
+        }
+
+        playerTurnDone = false;
+        if (slotMachineManager == null)
+        {
+            slotMachineManager = FindObjectOfType<SlotMachineManager>();
+        }
+
+        if (slotMachineManager)
+        {
+            slotMachineManager.BeginPlayerTurn();
+        }
+        else
+        {
+            playerTurnDone = true;
+        }
+
+        yield return new WaitUntil(() => playerTurnDone);
+        yield return new WaitForSeconds(1f);
         StartCoroutine(EnemyTurn());
     }
 
     IEnumerator EnemyTurn()
     {
+        if (wave > enemies.Length)
+        {
+            yield break;
+        }
+
         enemyParent.GetComponent<Animator>().Play("botParentAtk"); // attack animation
-        yield return new WaitForSeconds(6f);
+        yield return new WaitForSeconds(1f);
         StartCoroutine(PlayerTurn());
     }
 
@@ -73,7 +106,13 @@ public class TurnBaseManager : MonoBehaviour
 
     public void PlayerTakeDamage()
     {
-        playerHealth -= enemies[wave-1].damage;
+        if (wave > enemies.Length)
+        {
+            return;
+        }
+
+        playerHealth -= enemies[wave - 1].damage;
+        UpdatePlayerHealthUI();
         if (playerHealth <= 0)
         {
             gameOverPanel.Play("gameOverShow");
@@ -81,12 +120,53 @@ public class TurnBaseManager : MonoBehaviour
             Destroy(player);
         }
     }
+
     public void EnemyTakeDamage(float damage)
     {
         enemyHealth -= damage;
+        UpdateEnemyHealthUI();
+        Debug.Log("Enemy Take Damage " + enemyHealth);
         if (enemyHealth <= 0)
         {
-            Destroy(instantiatedEnemy);
+            if (instantiatedEnemy)
+            {
+                Destroy(instantiatedEnemy);
+            }
+
+            wave++;
+            if (wave <= enemies.Length)
+            {
+                SpawnEnemyForWave();
+            }
+            else
+            {
+                StopAllCoroutines();
+            }
         }
+    }
+
+    void SpawnEnemyForWave()
+    {
+        instantiatedEnemy =
+            Instantiate((enemies[wave - 1].isZombiebot) ? zombotPrefab : batbotPrefab, enemyParent);
+        enemyHealthBar = instantiatedEnemy.GetComponentInChildren<Slider>();
+        enemyHealth = enemies[wave - 1].health;
+        UpdateEnemyHealthUI();
+    }
+
+    void UpdatePlayerHealthUI()
+    {
+        if (!playerHealthBar) return;
+        playerHealthBar.maxValue = playerMaxHealth;
+        playerHealthBar.value = Mathf.Clamp(playerHealth, 0f, playerMaxHealth);
+    }
+
+    void UpdateEnemyHealthUI()
+    {
+        if (!enemyHealthBar) return;
+        if (wave > enemies.Length) return;
+        float enemyMaxHealth = enemies[wave - 1].health;
+        enemyHealthBar.maxValue = enemyMaxHealth;
+        enemyHealthBar.value = Mathf.Clamp(enemyHealth, 0f, enemyMaxHealth);
     }
 }
