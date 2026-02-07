@@ -22,17 +22,26 @@ public class Player : MonoBehaviour
     public float moveMaxRange = 40f;
 
 
-    [Header("Attack Settings")]
+
 
     public GameObject[] whipAtkAreas;
+    public GameObject wandBullet;
+    
+    [Header("Skill Level")]
+    public int whipLevel = 10;
+    public int garlicLevel = 10;
+    public int magicWandLevel = 10;
+
+
+
+    // Attack Stats -> derived from 'skill level'
     public float whipDamage = 4f;
     public float whipAtkRadius = 1.5f;
 
     public float garlicDamage = 4f;
     public float garlicAtkRadius = 3f;
-
-    public GameObject wandBullet;
     public float magicWandDamage = 3f;
+    public float  magicWandRadius;
 
 
 
@@ -46,6 +55,8 @@ public class Player : MonoBehaviour
     {
         healthBar.maxValue = health;
         healthBar.value = health;
+
+        RefreshAttackStats();
     }
     void Update()
     {
@@ -103,7 +114,7 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, garlicAtkRadius);
     }
 
-    void Whip()
+    public void Whip()
     {
         // whip
         GameObject a = Instantiate(particle, transform.position + transform.right * 2f, Quaternion.identity);
@@ -133,7 +144,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Garlic()
+    public void Garlic()
     {
         GameObject a = Instantiate(particle, transform.position, Quaternion.identity);
         Destroy(a, 3);
@@ -149,7 +160,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void MagicWand()
+    public void MagicWand()
     {
         // Find nearest enemy
         Enemy nearestEnemy = null;
@@ -172,7 +183,23 @@ public class Player : MonoBehaviour
             Quaternion bulletRotation = Quaternion.LookRotation(dir, Vector3.up);
             GameObject instantiatedWandBullet = Instantiate(wandBullet, transform.position, bulletRotation);
             instantiatedWandBullet.GetComponent<WandBullet>().damage = magicWandDamage;
+            instantiatedWandBullet.GetComponent<WandBullet>().explosionAtkRadius = magicWandRadius;
         }
+    }
+
+    public void RefreshAttackStats(){
+        // Approximation to attack stats progression (still need to be adjusted after playtesting)
+        // Whip
+        whipDamage = Mathf.Clamp(5.2f - whipLevel*0.2f, 0.2f, Mathf.Infinity); // 4 to 0.2 in 27 level
+        whipAtkRadius = 1.5f; // maybe don't decrease radius, it can ruin the atk area
+
+        // Garlic
+        garlicDamage = Mathf.Clamp(5.2f - garlicLevel*0.2f, 0.2f, Mathf.Infinity);
+        garlicAtkRadius = Mathf.Clamp(4f - garlicLevel*0.1f, 0.2f, Mathf.Infinity);
+
+        // Magic Wand
+        magicWandDamage = Mathf.Clamp(5.2f - garlicLevel*0.2f, 0.2f, Mathf.Infinity);
+        magicWandRadius = Mathf.Clamp(3f - garlicLevel*0.1f, 0.2f, Mathf.Infinity);
     }
 
     void OnTriggerEnter(Collider col)
@@ -184,4 +211,6 @@ public class Player : MonoBehaviour
             Destroy(col.gameObject);
         }
     }
+
+    
 }
