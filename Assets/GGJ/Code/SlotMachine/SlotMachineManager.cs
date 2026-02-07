@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GGJ.Code.Audio;
+using UnityEngine;
 
 namespace GGJ.Code.SlotMachine
 {
@@ -55,7 +56,13 @@ namespace GGJ.Code.SlotMachine
         {
             if (machines == null || machines.Length == 0) return;
 
-            _isLastMachine = _currentMachineIndex == machines.Length - 1;
+            _isLastMachine = false;
+            if (_currentMachineIndex == machines.Length - 1)
+            {
+                AudioManager.Instance.StopLoopedSfx("SlotMachineRolling");
+                _isLastMachine = _currentMachineIndex == machines.Length - 1;
+            }
+
             Debug.Log($"Machine {machine.gameObject.name} finished processing.");
 
             _currentMachineIndex = (_currentMachineIndex + 1) % machines.Length;
@@ -72,10 +79,18 @@ namespace GGJ.Code.SlotMachine
 
         void RestartAllMachine()
         {
+            Invoke(nameof(DelayStartSpinSFX), 0.25f);
             foreach (SlotMachineController machine in machines)
             {
                 machine.StartSpin();
             }
+        }
+
+        void DelayStartSpinSFX()
+        {
+            AudioManager.Instance.PlaySfx("StartSlot");
+            AudioManager.Instance.PlayLoopedSfx("SlotMachineRolling");
+
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GGJ.Code.Audio;
 using GGJ.Code.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -134,6 +135,8 @@ namespace GGJ.Code.SlotMachine
                     symbolController.EnableOutline(true);
                     _outlinedSymbol.Add(symbolController);
                 }
+                // AudioManager.Instance.PlaySfx("ButtonStop");
+                AudioManager.Instance.PlaySfx("CoinDrop");  
 
                 // Debug.Log(
                 //     $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
@@ -145,6 +148,7 @@ namespace GGJ.Code.SlotMachine
                     Debug.Log("CRIT! Same symbol type detected on consecutive reels!");
                     TextPopupManager.Instance.CreateCriticalPopup(finalResults[i].Symbol.transform.position +
                                                                   new Vector3(0, -0.5f, -0.5f));
+                    AudioManager.Instance.PlaySfx("CriticalHit");
                 }
 
                 yield return new WaitForSeconds(0.2f);
