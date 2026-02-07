@@ -184,7 +184,7 @@ public class Player : MonoBehaviour
     public void RefreshAttackStats(){
         // Approximation to attack stats progression (still need to be adjusted after playtesting)
         // Whip
-        whipDamage = Mathf.Clamp(5.2f - whipLevel*0.2f, 0.2f, Mathf.Infinity); // 4 to 0.2 in 27 level
+        whipDamage = 5;
         whipAtkRadius = 1.5f; // maybe don't decrease radius, it can ruin the atk area
 
         // Garlic
