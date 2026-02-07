@@ -25,7 +25,7 @@ namespace GGJ.Code.SlotMachine
 
         public bool IsSpinning => _isSpinning;
         public bool IsStopping => _isStopping;
-        int LastCalculatedDamage { get; set; }
+        public int LastCalculatedDamage { get; private set; }
 
         public event Action<SlotMachineController> OnProcessingStarted;
         public event Action<SlotMachineController> OnProcessingCompleted;

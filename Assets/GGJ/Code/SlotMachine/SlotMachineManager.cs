@@ -11,10 +11,14 @@ namespace GGJ.Code.SlotMachine
         [SerializeField]
         KeyCode stopKey = KeyCode.Return;
 
+        [SerializeField]
+        TurnBaseManager turnBaseManager;
+
         int _currentMachineIndex;
         bool _isLastMachine;
+        int _totalTurnDamage;
 
-        void Start()
+        void Awake()
         {
             if (machines == null || machines.Length == 0) return;
 
@@ -24,8 +28,14 @@ namespace GGJ.Code.SlotMachine
                 machine.OnProcessingStarted += HandleMachineStarted;
                 machine.OnProcessingCompleted += HandleMachineCompleted;
             }
+        }
 
-            RestartAllMachine();
+        void Start()
+        {
+            if (turnBaseManager == null)
+            {
+                turnBaseManager = FindObjectOfType<TurnBaseManager>();
+            }
         }
 
         void OnDestroy()
@@ -70,11 +80,24 @@ namespace GGJ.Code.SlotMachine
 
         void HandleMachineCompleted(SlotMachineController machine)
         {
+            if (machine)
+            {
+                _totalTurnDamage += machine.LastCalculatedDamage;
+            }
+
             if (machine == machines[^1])
             {
-                RestartAllMachine();
-                _isLastMachine = false;
+                ApplyTurnDamage();
             }
+        }
+
+        public void BeginPlayerTurn()
+        {
+            if (machines == null || machines.Length == 0) return;
+            _totalTurnDamage = 0;
+            _currentMachineIndex = 0;
+            _isLastMachine = false;
+            RestartAllMachine();
         }
 
         void RestartAllMachine()
@@ -91,6 +114,18 @@ namespace GGJ.Code.SlotMachine
             AudioManager.Instance.PlaySfx("StartSlot");
             AudioManager.Instance.PlayLoopedSfx("SlotMachineRolling");
 
+        }
+
+        void ApplyTurnDamage()
+        {
+            if (turnBaseManager)
+            {
+                if (_totalTurnDamage > 0)
+                {
+                    turnBaseManager.EnemyTakeDamage(_totalTurnDamage);
+                }
+                turnBaseManager.PlayerTurnDone();
+            }
         }
     }
 }
