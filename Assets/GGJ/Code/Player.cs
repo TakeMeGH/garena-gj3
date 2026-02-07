@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public GameObject particle;
+    public Animator animator;
     
     public Slider healthBar;
 
@@ -43,6 +44,8 @@ public class Player : MonoBehaviour
         // rotate
         if (_moveDirection != Vector2.zero)
         {
+            animator.SetBool("isWalking", true);
+
             // Calculate the angle in radians using Atan2, which handles all quadrants correctly
             float angleRadians = Mathf.Atan2(_moveDirection.y, _moveDirection.x);
 
@@ -55,6 +58,8 @@ public class Player : MonoBehaviour
 
             // Apply the rotation to the GameObject's transform
             transform.rotation = targetRotation;
+        } else {
+            animator.SetBool("isWalking", false);
         }
 
         // clamp position, can't move outside border

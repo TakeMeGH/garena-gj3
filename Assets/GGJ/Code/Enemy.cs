@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
         rb.linearVelocity = Vector3.MoveTowards(rb.linearVelocity, diffToGoal.normalized * speed, 5 * speed * Time.deltaTime);
 
         // clamp position, can't move outside border
-        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -moveMaxRange, moveMaxRange), transform.position.y, Mathf.Clamp(transform.position.z, -moveMaxRange, moveMaxRange));
+        //transform.position = new Vector3(Mathf.Clamp(transform.position.x, -moveMaxRange, moveMaxRange), transform.position.y, Mathf.Clamp(transform.position.z, -moveMaxRange, moveMaxRange));
     }
 
     public void SetTarget(Vector3 targetPoss)
