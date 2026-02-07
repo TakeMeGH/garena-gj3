@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5051403925289667325, guid: 4f658289b2ce5564a9c6da871c3beab6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9136829233176401387, guid: 4f658289b2ce5564a9c6da871c3beab6, type: 3}
       propertyPath: m_Name
       value: GarlicReels
