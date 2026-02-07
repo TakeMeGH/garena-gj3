@@ -1,14 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
-using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
 
 public class Player : MonoBehaviour
 {
     public GameObject particle;
     public Animator animator;
     
+    public TMP_Text coinText;
     public Slider healthBar;
 
     public float health = 10f;
@@ -27,6 +29,7 @@ public class Player : MonoBehaviour
     public float whipAtkRadius;
     private float whipDelay = 1f;
     private float whipTimer;
+    private int coin;
 
     void Start()
     {
@@ -72,7 +75,9 @@ public class Player : MonoBehaviour
             whipTimer = whipDelay;
 
             // whip
-            Instantiate(particle, transform.position, Quaternion.identity);
+            Instantiate(particle, transform.position + transform.right * 2f, Quaternion.identity);
+            Instantiate(particle, transform.position + transform.right * 4f, Quaternion.identity);
+            Instantiate(particle, transform.position + transform.right * 6f, Quaternion.identity);
 
             // Collect all unique enemies in whip attack areas
             HashSet<Enemy> enemies = new HashSet<Enemy>();
@@ -113,6 +118,16 @@ public class Player : MonoBehaviour
             {
                 Gizmos.DrawWireSphere(atkArea.transform.position, whipAtkRadius);
             }
+        }
+    }
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.CompareTag("Coin"))
+        {
+            coin += 1;
+            coinText.text = "Coin: " + coin.ToString();
+            Destroy(col.gameObject);
         }
     }
 }

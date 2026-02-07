@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject coin;
     public float health = 10f;
     public float damage = 2f;
     public float speed = 5f;
@@ -77,6 +78,7 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
+            Instantiate(coin, transform.position, Quaternion.identity);
         }
     }
 }

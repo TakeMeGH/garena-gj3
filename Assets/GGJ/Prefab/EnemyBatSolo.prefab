@@ -126,10 +126,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 387b9ed5340b3084e8ec83a2fa8afc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  coin: {fileID: 6537904818491898440, guid: 999d9cf12008c074e8ab0a88bb2dff34, type: 3}
   health: 10
   damage: 2
   speed: 5
   moveMaxRange: 40
+  hitDuration: 0.1
 --- !u!54 &3914452750064268318
 Rigidbody:
   m_ObjectHideFlags: 0
