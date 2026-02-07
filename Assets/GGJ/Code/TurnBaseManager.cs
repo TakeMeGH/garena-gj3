@@ -3,6 +3,7 @@ using GGJ.Code.SlotMachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TurnBaseManager : MonoBehaviour
 {
@@ -70,7 +71,7 @@ public class TurnBaseManager : MonoBehaviour
         playerTurnDone = false;
         if (slotMachineManager == null)
         {
-            slotMachineManager = FindObjectOfType<SlotMachineManager>();
+            slotMachineManager = FindFirstObjectByType<SlotMachineManager>();
         }
 
         if (slotMachineManager)
@@ -115,6 +116,7 @@ public class TurnBaseManager : MonoBehaviour
         UpdatePlayerHealthUI();
         if (playerHealth <= 0)
         {
+            gameOverPanel.gameObject.SetActive(true);
             gameOverPanel.Play("gameOverShow");
             waveReachedText.text = "Wave Reached: " + wave.ToString();
             Destroy(player);
@@ -168,5 +170,10 @@ public class TurnBaseManager : MonoBehaviour
         float enemyMaxHealth = enemies[wave - 1].health;
         enemyHealthBar.maxValue = enemyMaxHealth;
         enemyHealthBar.value = Mathf.Clamp(enemyHealth, 0f, enemyMaxHealth);
+    }
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
