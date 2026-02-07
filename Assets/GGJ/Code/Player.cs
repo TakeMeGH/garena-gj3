@@ -72,13 +72,13 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -moveMaxRange, moveMaxRange), transform.position.y, Mathf.Clamp(transform.position.z, -moveMaxRange, moveMaxRange));
 
         // whip
-        whipTimer -= Time.deltaTime;
-        if (whipTimer < 0)
-        {
-            whipTimer = whipDelay;
-
-            MagicWand();
-        }
+        // whipTimer -= Time.deltaTime;
+        // if (whipTimer < 0)
+        // {
+        //     whipTimer = whipDelay;
+        //
+        //     MagicWand();
+        // }
     }
     public void TakeDamage(float damage)
     {
@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, garlicAtkRadius);
     }
 
-    void Whip()
+    public void Whip()
     {
         // whip
         GameObject a = Instantiate(particle, transform.position + transform.right * 2f, Quaternion.identity);
@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Garlic()
+    public void Garlic()
     {
         GameObject a = Instantiate(particle, transform.position, Quaternion.identity);
         Destroy(a, 3);
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void MagicWand()
+    public void MagicWand()
     {
         // Find nearest enemy
         Enemy nearestEnemy = null;

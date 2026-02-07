@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using GGJ.Code.Audio;
@@ -18,6 +19,7 @@ namespace GGJ.Code.SlotMachine
         [SerializeField]
         float stopDelay = 0.25f;
 
+        Player _player;
         bool _isSpinning;
         int _currentReelToStop;
         bool _isStopping;
@@ -134,9 +136,24 @@ namespace GGJ.Code.SlotMachine
                 {
                     symbolController.EnableOutline(true);
                     _outlinedSymbol.Add(symbolController);
+                    switch (symbolController.SymbolType)
+                    {
+                        case SymbolType.Whip:
+                            GetPlayer().Whip();
+                            break;
+                        case SymbolType.MagicWand:
+                            GetPlayer().MagicWand();
+                            break;
+                        case SymbolType.Garlic:
+                            GetPlayer().Garlic();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
+
                 // AudioManager.Instance.PlaySfx("ButtonStop");
-                AudioManager.Instance.PlaySfx("CoinDrop");  
+                AudioManager.Instance.PlaySfx("CoinDrop");
 
                 // Debug.Log(
                 //     $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
@@ -158,6 +175,13 @@ namespace GGJ.Code.SlotMachine
             _isStopping = false;
 
             OnProcessingCompleted?.Invoke(this);
+        }
+
+        Player GetPlayer()
+        {
+            if (_player != null) return _player;
+            _player = FindObjectOfType<Player>();
+            return _player;
         }
     }
 }
