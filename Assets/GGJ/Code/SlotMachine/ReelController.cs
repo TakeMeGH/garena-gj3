@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GGJ.Code.Audio;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -34,6 +35,9 @@ namespace GGJ.Code.SlotMachine
 
         [SerializeField]
         float stopDuration = 0.6f;
+
+        [SerializeField]
+        float nextActionDelayDuration = 0.5f;
 
         [ShowInInspector, ReadOnly]
         readonly List<SymbolDataPerIndex> _symbols = new();
@@ -157,6 +161,7 @@ namespace GGJ.Code.SlotMachine
             float elapsed = 0f;
             float startSpeed = spinSpeed;
 
+            AudioManager.Instance.PlaySfx("ButtonStop");
             while (elapsed < stopDuration)
             {
                 elapsed += Time.deltaTime;
@@ -165,6 +170,8 @@ namespace GGJ.Code.SlotMachine
                 MoveSymbols(currentSpeed * Time.deltaTime);
                 yield return null;
             }
+            
+            yield return new WaitForSeconds(nextActionDelayDuration);
 
             IsSpinning = false;
             _stopRoutine = null;

@@ -83,13 +83,13 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -moveMaxRange, moveMaxRange), transform.position.y, Mathf.Clamp(transform.position.z, -moveMaxRange, moveMaxRange));
 
         // whip
-        whipTimer -= Time.deltaTime;
-        if (whipTimer < 0)
-        {
-            whipTimer = whipDelay;
-
-            MagicWand();
-        }
+        // whipTimer -= Time.deltaTime;
+        // if (whipTimer < 0)
+        // {
+        //     whipTimer = whipDelay;
+        //
+        //     MagicWand();
+        // }
     }
     public void TakeDamage(float damage)
     {
