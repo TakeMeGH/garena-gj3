@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using GGJ.Code.UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,7 +16,7 @@ namespace GGJ.Code.SlotMachine
 
         [SerializeField]
         float stopDelay = 0.25f;
-        
+
         bool _isSpinning;
         int _currentReelToStop;
         bool _isStopping;
@@ -27,7 +28,7 @@ namespace GGJ.Code.SlotMachine
         public event System.Action<SlotMachineController> OnProcessingCompleted;
 
         List<SymbolController> _outlinedSymbol = new();
-        
+
         public void StartSpin()
         {
             if (_isSpinning || reels == null || reels.Length == 0)
@@ -128,21 +129,22 @@ namespace GGJ.Code.SlotMachine
                 if (!reel) continue;
 
                 ReelController.SymbolResult result = finalResults[i];
-                string symbolInfo = result.Symbol ? result.Symbol.name : "None";
                 if (result.Symbol && result.Symbol.TryGetComponent(out SymbolController symbolController))
                 {
                     symbolController.EnableOutline(true);
                     _outlinedSymbol.Add(symbolController);
                 }
 
-                Debug.Log(
-                    $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
+                // Debug.Log(
+                //     $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
 
                 if (i + 2 < reels.Length && finalResults[i].SymbolType != -1 &&
                     finalResults[i].SymbolType == finalResults[i + 1].SymbolType &&
                     finalResults[i].SymbolType == finalResults[i + 2].SymbolType)
                 {
                     Debug.Log("CRIT! Same symbol type detected on consecutive reels!");
+                    TextPopupManager.Instance.CreateCriticalPopup(finalResults[i].Symbol.transform.position +
+                                                                  new Vector3(0, -0.5f, -0.5f));
                 }
 
                 yield return new WaitForSeconds(0.2f);
@@ -153,6 +155,5 @@ namespace GGJ.Code.SlotMachine
 
             OnProcessingCompleted?.Invoke(this);
         }
-
     }
 }
