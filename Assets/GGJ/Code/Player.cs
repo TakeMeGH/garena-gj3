@@ -50,7 +50,6 @@ public class Player : MonoBehaviour
 
     
     private Vector2 _moveDirection;
-    private float whipDelay = 1f;
     private float whipTimer;
     private int coin;
 
@@ -85,14 +84,6 @@ public class Player : MonoBehaviour
         // clamp position, can't move outside border
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -moveMaxRange, moveMaxRange), transform.position.y, Mathf.Clamp(transform.position.z, -moveMaxRange, moveMaxRange));
 
-        // whip
-        // whipTimer -= Time.deltaTime;
-        // if (whipTimer < 0)
-        // {
-        //     whipTimer = whipDelay;
-        //
-        //     MagicWand();
-        // }
     }
     void OnDrawGizmosSelected()
     {
