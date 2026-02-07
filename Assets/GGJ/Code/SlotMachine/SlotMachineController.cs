@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GGJ.Code.Audio;
 using GGJ.Code.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 namespace GGJ.Code.SlotMachine
@@ -19,6 +20,9 @@ namespace GGJ.Code.SlotMachine
         [SerializeField]
         float stopDelay = 0.25f;
 
+        [SerializeField]
+        SlotMiniGameUI miniGameUI;
+
         Player _player;
         bool _isSpinning;
         int _currentReelToStop;
@@ -27,10 +31,10 @@ namespace GGJ.Code.SlotMachine
         public bool IsSpinning => _isSpinning;
         public bool IsStopping => _isStopping;
 
-        public event System.Action<SlotMachineController> OnProcessingStarted;
-        public event System.Action<SlotMachineController> OnProcessingCompleted;
+        public event Action<SlotMachineController> OnProcessingStarted;
+        public event Action<SlotMachineController> OnProcessingCompleted;
 
-        List<SymbolController> _outlinedSymbol = new();
+        readonly List<SymbolController> _outlinedSymbol = new();
 
         public void StartSpin()
         {
@@ -126,6 +130,9 @@ namespace GGJ.Code.SlotMachine
                 finalResults[i] = reels[i].GetSymbolAtIndex(centerResult.Index + offsets[i]);
             }
 
+            bool hasMatch = TryGetMatchRun(finalResults, out SymbolType matchSymbolType, out int matchCount,
+                out int matchStartIndex);
+
             for (int i = 0; i < reels.Length; i++)
             {
                 ReelController reel = reels[i];
@@ -136,39 +143,26 @@ namespace GGJ.Code.SlotMachine
                 {
                     symbolController.EnableOutline(true);
                     _outlinedSymbol.Add(symbolController);
-                    switch (symbolController.SymbolType)
-                    {
-                        case SymbolType.Whip:
-                            GetPlayer().Whip();
-                            break;
-                        case SymbolType.MagicWand:
-                            GetPlayer().MagicWand();
-                            break;
-                        case SymbolType.Garlic:
-                            GetPlayer().Garlic();
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
                 }
 
-                // AudioManager.Instance.PlaySfx("ButtonStop");
                 AudioManager.Instance.PlaySfx("CoinDrop");
 
-                // Debug.Log(
-                //     $"Processing reel: {reel.gameObject.name}, Offset: {offsets[i]}, Target Index: {result.Index}, Symbol: {symbolInfo}, Type: {result.SymbolType}");
+                yield return new WaitForSeconds(0.2f);
+            }
 
-                if (i + 2 < reels.Length && finalResults[i].SymbolType != -1 &&
-                    finalResults[i].SymbolType == finalResults[i + 1].SymbolType &&
-                    finalResults[i].SymbolType == finalResults[i + 2].SymbolType)
+            if (hasMatch)
+            {
+                Debug.Log($"Match detected: {matchCount} in a row. Starting minigame.");
+                if (matchStartIndex >= 0 && matchStartIndex < finalResults.Length &&
+                    finalResults[matchStartIndex].Symbol)
                 {
-                    Debug.Log("CRIT! Same symbol type detected on consecutive reels!");
-                    TextPopupManager.Instance.CreateCriticalPopup(finalResults[i].Symbol.transform.position +
-                                                                  new Vector3(0, -0.5f, -0.5f));
-                    AudioManager.Instance.PlaySfx("CriticalHit");
+                    TextPopupManager.Instance.CreateCriticalPopup(
+                        finalResults[matchStartIndex].Symbol.transform.position +
+                        new Vector3(0, -0.5f, -0.5f));
                 }
 
-                yield return new WaitForSeconds(0.2f);
+                AudioManager.Instance.PlaySfx("CriticalHit");
+                yield return RunMiniGame(matchSymbolType, matchCount);
             }
 
             _isSpinning = false;
@@ -179,9 +173,104 @@ namespace GGJ.Code.SlotMachine
 
         Player GetPlayer()
         {
-            if (_player != null) return _player;
-            _player = FindObjectOfType<Player>();
+            if (_player) return _player;
+            _player = FindFirstObjectByType<Player>();
             return _player;
+        }
+
+        static bool TryGetMatchRun(ReelController.SymbolResult[] results, out SymbolType matchSymbolType,
+            out int matchCount,
+            out int matchStartIndex)
+        {
+            const int minMatch = 3;
+            const int maxMatch = 5;
+            matchSymbolType = default;
+            matchCount = 0;
+            matchStartIndex = -1;
+
+            if (results == null || results.Length < minMatch)
+            {
+                return false;
+            }
+
+            int currentCount = 0;
+            int bestCount = 0;
+            int lastType = -1;
+            int currentStartIndex = 0;
+            int bestStartIndex = -1;
+
+            for (int i = 0; i < results.Length; i++)
+            {
+                int symbolType = results[i].SymbolType;
+                if (symbolType < 0)
+                {
+                    currentCount = 0;
+                    lastType = -1;
+                    continue;
+                }
+
+                if (symbolType == lastType)
+                {
+                    currentCount++;
+                }
+                else
+                {
+                    currentCount = 1;
+                    lastType = symbolType;
+                    currentStartIndex = i;
+                }
+
+                if (currentCount >= minMatch && currentCount > bestCount)
+                {
+                    bestCount = currentCount;
+                    matchSymbolType = (SymbolType)symbolType;
+                    bestStartIndex = currentStartIndex;
+                }
+            }
+
+            if (bestCount < minMatch) return false;
+
+            matchCount = Mathf.Clamp(bestCount, minMatch, maxMatch);
+            matchStartIndex = bestStartIndex;
+            return true;
+        }
+
+        IEnumerator RunMiniGame(SymbolType symbolType, int matchCount)
+        {
+            SlotMiniGame miniGame = CreateMiniGame(matchCount);
+            miniGame.Start();
+            if (miniGameUI) miniGameUI.Show(miniGame);
+            Debug.Log($"Minigame {miniGame.Name} started. Press Enter.");
+
+            while (!IsEnterPressed())
+            {
+                miniGame.Tick(Time.deltaTime);
+                if (miniGameUI) miniGameUI.UpdateUI(miniGame);
+                yield return null;
+            }
+
+            float score = miniGame.Complete();
+            Debug.Log($"Minigame {miniGame.Name} score: {score:F0}%");
+            if (miniGameUI) miniGameUI.Hide();
+
+            GetPlayer().ApplyPowerUp(symbolType, score, matchCount);
+        }
+
+        static SlotMiniGame CreateMiniGame(int matchCount)
+        {
+            int roll = Random.Range(0, 2);
+            return roll switch
+            {
+                0 => new BarPeakMiniGame(),
+                _ => new BowAndArrowMiniGame()
+            };
+        }
+
+        static bool IsEnterPressed()
+        {
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null) return false;
+            return keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame;
         }
     }
 }

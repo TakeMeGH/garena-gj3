@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEditor.ShaderGraph.Internal;
 using System;
+using GGJ.Code.SlotMachine;
 using GGJ.Code.Utils.LevelManager;
 
 
@@ -194,6 +195,36 @@ public class Player : MonoBehaviour
         // Magic Wand
         magicWandDamage = Mathf.Clamp(5.2f - garlicLevel*0.2f, 0.2f, Mathf.Infinity);
         magicWandRadius = Mathf.Clamp(3f - garlicLevel*0.1f, 0.2f, Mathf.Infinity);
+    }
+
+    public void ApplyPowerUp(SymbolType symbolType, float powerPercent, int matchCount)
+    {
+        int maxBonus = matchCount switch
+        {
+            3 => 1,
+            4 => 2,
+            _ => 3
+        };
+
+        int bonus = Mathf.Clamp(Mathf.RoundToInt((powerPercent / 100f) * maxBonus), 0, maxBonus);
+        if (bonus <= 0) return;
+
+        switch (symbolType)
+        {
+            case SymbolType.Whip:
+                whipLevel += bonus;
+                break;
+            case SymbolType.MagicWand:
+                magicWandLevel += bonus;
+                break;
+            case SymbolType.Garlic:
+                garlicLevel += bonus;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(symbolType), symbolType, null);
+        }
+
+        RefreshAttackStats();
     }
 
     void OnTriggerEnter(Collider col)
