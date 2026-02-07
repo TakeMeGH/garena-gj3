@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using GGJ.Code.UI;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -77,6 +78,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float damage, Vector3 knockbackVelocity)
     {
+        TextPopupManager.Instance.CreateDamagePopup(transform.position + new Vector3(0, 1f, 0), damage);
         rb.linearVelocity = knockbackVelocity;
         health -= damage;
         if (health <= 0)
