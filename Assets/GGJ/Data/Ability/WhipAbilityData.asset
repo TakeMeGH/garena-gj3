@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44e0aee62299472880e20dabb3bbbb44, type: 3}
+  m_Name: WhipAbilityData
+  m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.Ability.SharedAbilityData
+  icon: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  abilityName: Whip
+  abilityLevel: 10
+  description: Reduce whip damage from {x0} to {y0} and reduce whip range from {x1}
+    to {y1}
+  dynamicValues:
+  - OldValue: 10
+    NewValue: 5
+  - OldValue: 12
+    NewValue: 6

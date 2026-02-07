@@ -336,7 +336,7 @@ namespace MoreMountains.Feedbacks
 		{
 			if (PooledSimpleMMFloatingText == null)
 			{
-				Debug.LogError(this.name + " : no PooledSimpleMMFloatingText prefab has been set.");
+					Debug.LogError(this.name + " : no PooledSimpleMMFloatingText prefab has been set.");
 				return;
 			}
 			GameObject newPooler = new GameObject();
