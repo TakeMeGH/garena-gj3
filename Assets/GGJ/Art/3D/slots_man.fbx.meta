@@ -3,7 +3,12 @@ guid: 19a225eb46c2bd7428adebc4944f5d6d
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: garenagj3_tex
+    second: {fileID: 2100000, guid: 291749763bd63f84aa53ed4f7eb74c86, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
