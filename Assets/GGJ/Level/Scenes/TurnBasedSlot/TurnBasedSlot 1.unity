@@ -939,6 +939,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlotCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 7507544505441733354, guid: cf02126f9e35f2c46999b247eb4b70aa, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1118,17 +1122,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 904800109}
-  m_LocalRotation: {x: -0, y: -0.678647, z: -0, w: 0.73446465}
-  m_LocalPosition: {x: 0, y: 0, z: 2.3114438}
+  m_LocalRotation: {x: -0, y: -0.5772161, z: -0, w: 0.81659144}
+  m_LocalPosition: {x: 0, y: 0, z: 2.2627976}
   m_LocalScale: {x: 0.009999997, y: 0.01, z: 0.009999997}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1871000933}
   m_Father: {fileID: 848958302}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -70.51, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.5801257, y: -0.5}
+  m_AnchoredPosition: {x: 0.8095432, y: -0.5}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &904800111
@@ -1201,12 +1205,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 904800109}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 148781676afea6d4dac92ceccbf2f228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.UI.BillboardWorldSpaceUI
-  targetCamera: {fileID: 339218392}
+  targetCamera: {fileID: 0}
   lockX: 0
   lockY: 0
   lockZ: 0
@@ -2879,16 +2883,37 @@ MonoBehaviour:
   gameOverPanel: {fileID: 1749163952}
   waveReachedText: {fileID: 1482921957}
   enemies:
-  - isZombiebot: 0
-    health: 2000
-    damage: 3
-  - isZombiebot: 0
-    health: 2000
-    damage: 3
-  - isZombiebot: 0
-    health: 2000
-    damage: 3
-  playerHealth: 10
+  - prefab: {fileID: 5815725589758524971, guid: 9ab763b7f244ab34eb35fc9b5af4c92b, type: 3}
+    health: 120
+    damage: 175
+  - prefab: {fileID: 7098167347279625103, guid: ef125c6bb845326439a2f218e704c22b, type: 3}
+    health: 262
+    damage: 175
+  - prefab: {fileID: 7035789369954215576, guid: 5f6d0e6376653bd4d8bff59d6ef35b84, type: 3}
+    health: 404
+    damage: 175
+  - prefab: {fileID: 7098167347279625103, guid: 6a5ca5196567544479c7d779d2f7a052, type: 3}
+    health: 546
+    damage: 175
+  - prefab: {fileID: 5902786259188917344, guid: c2ecf67ddffa2cf4c8ee90402bd710d8, type: 3}
+    health: 688
+    damage: 175
+  - prefab: {fileID: 7098167347279625103, guid: ef125c6bb845326439a2f218e704c22b, type: 3}
+    health: 830
+    damage: 175
+  - prefab: {fileID: 7098167347279625103, guid: f3ba43ee0b66a1e4aa7ac1b9e1aecbdc, type: 3}
+    health: 972
+    damage: 175
+  - prefab: {fileID: 5902786259188917344, guid: e0cb5be23f2dc624fb56e2dba2df7d36, type: 3}
+    health: 1114
+    damage: 233
+  - prefab: {fileID: 5902786259188917344, guid: 4a554a27ea26fdc4398d5bfedc71dbd9, type: 3}
+    health: 1256
+    damage: 233
+  - prefab: {fileID: 5902786259188917344, guid: 38444de1d60ef8741861a0d3444b79f7, type: 3}
+    health: 1400
+    damage: 350
+  playerHealth: 700
   player: {fileID: 441177878}
   batbotPrefab: {fileID: 5815725589758524971, guid: 9ab763b7f244ab34eb35fc9b5af4c92b, type: 3}
   zombotPrefab: {fileID: 7035789369954215576, guid: 5f6d0e6376653bd4d8bff59d6ef35b84, type: 3}

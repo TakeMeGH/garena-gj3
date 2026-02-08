@@ -13,7 +13,7 @@ public class TurnBaseManager : MonoBehaviour
     [System.Serializable]
     public class Enemy
     {
-        public bool isZombiebot = false;
+        public GameObject prefab;
         public float health = 10;
         public float damage = 3;
     }
@@ -155,8 +155,10 @@ public class TurnBaseManager : MonoBehaviour
 
     void SpawnEnemyForWave()
     {
+        playerHealth = playerMaxHealth;
+        UpdatePlayerHealthUI();
         instantiatedEnemy =
-            Instantiate((enemies[wave - 1].isZombiebot) ? zombotPrefab : batbotPrefab, enemyParent);
+            Instantiate(enemies[wave - 1].prefab, enemyParent);
         enemyHealthBar = instantiatedEnemy.GetComponentInChildren<Slider>();
         enemyHealth = enemies[wave - 1].health;
         UpdateEnemyHealthUI();
