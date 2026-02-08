@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Common2
   m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.Ability.SharedAbilityData
   cardType: 2
-  icon: {fileID: 5524590292671962877, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  icon: {fileID: 21300000, guid: 28af082905a1357479fb80580bdfaf49, type: 3}
   abilityName: Common2
   abilityRarity: 0
   description: Reduce magic wand damage from {x0} to {y0} and reduce magic wand range
