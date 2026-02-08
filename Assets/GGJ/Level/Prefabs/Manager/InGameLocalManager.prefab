@@ -113,7 +113,7 @@ MonoBehaviour:
   NestWaitingPool: 1
   MutualizeWaitingPools: 1
   PoolCanExpand: 1
-  Lifetime: {x: 2, y: 2}
+  Lifetime: {x: 1, y: 1}
   SpawnOffsetMin: {x: 0, y: 0, z: 0}
   SpawnOffsetMax: {x: 0, y: 0, z: 0}
   AnimateMovement: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
   AlignmentMode: 0
   FixedAlignment: {x: 0, y: 1, z: 0}
   AlwaysFaceCamera: 1
-  AutoGrabMainCameraOnStart: 1
+  AutoGrabMainCameraOnStart: 0
   TargetCamera: {fileID: 0}
   AnimateScale: 1
   RemapScaleZero: {x: 0, y: 0}
@@ -478,7 +478,7 @@ MonoBehaviour:
   AlignmentMode: 0
   FixedAlignment: {x: 0, y: 1, z: 0}
   AlwaysFaceCamera: 1
-  AutoGrabMainCameraOnStart: 1
+  AutoGrabMainCameraOnStart: 0
   TargetCamera: {fileID: 0}
   AnimateScale: 1
   RemapScaleZero: {x: 0, y: 0}
@@ -1081,7 +1081,7 @@ MonoBehaviour:
         Label: Floating Text
         OriginalLabel: Floating Text
         ChannelMode: 0
-        Channel: 0
+        Channel: 1
         MMChannelDefinition: {fileID: 0}
         Chance: 100
         Timing:
@@ -1188,6 +1188,71 @@ MonoBehaviour:
         TargetTransform: {fileID: 0}
         Direction: {x: 0, y: 0, z: 0}
         AttachmentTransform: {fileID: 0}
+--- !u!1 &6763155290750266730
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1818785078454260822}
+  - component: {fileID: 2268332548869061884}
+  m_Layer: 0
+  m_Name: ShopManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1818785078454260822
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763155290750266730}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8240439368384985974}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2268332548869061884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763155290750266730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce6acdb09e32e8b4691a6cf76fef346a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.Ability.AbilityShopManager
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  abilityPool:
+  - {fileID: 11400000, guid: 5de2d598e58375d4eb0b20a6dd22c2ea, type: 2}
+  - {fileID: 11400000, guid: 1941a7356b38c0b4d89ff544a45672d4, type: 2}
+  - {fileID: 11400000, guid: d4ffdf441c64f974b9e7d295086eca68, type: 2}
+  - {fileID: 11400000, guid: 0e1f0cad7b42b3a4e9b4c9ac6381a3d5, type: 2}
+  - {fileID: 11400000, guid: b48917e28eab14f4ca60604e9994be12, type: 2}
+  - {fileID: 11400000, guid: 052a6effca2e6b44daa4a9cc3d1b172c, type: 2}
+  shopOptionCount: 3
+  allowDuplicates: 0
+  commonWeight: 70
+  uncommonWeight: 25
+  rareWeight: 5
 --- !u!1 &9149139806238937939
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,5 +1286,6 @@ Transform:
   - {fileID: 8346182831844241173}
   - {fileID: 7115551786965442952}
   - {fileID: 7218515210488075254}
+  - {fileID: 1818785078454260822}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -36,7 +36,10 @@ namespace GGJ.Code.SlotMachine
         float nextActionDelayDuration = 0.5f;
 
         [SerializeField]
-        List<SymbolController> symbolConfiguration = new();
+        List<SymbolController> AllSymbolConfigurations = new();
+
+        // [SerializeField]
+        // List<SymbolController> symbolConfiguration = new();
 
         readonly List<SymbolDataPerIndex> _symbols = new();
 
@@ -60,18 +63,48 @@ namespace GGJ.Code.SlotMachine
 
         void Start()
         {
-            int totalSymbols = Mathf.Max(visibleSymbols + bufferSymbols, 1);
+            // int totalSymbols = Mathf.Max(visibleSymbols + bufferSymbols, 1);
+            //
+            // for (int i = 0; i < totalSymbols; i++)
+            // {
+            //     SymbolController symbolObject = Instantiate(symbolConfiguration[i], 
+            //         transform, false);
+            //
+            //     float y = topY - i * symbolHeight;
+            //     symbolObject.transform.localPosition = new Vector3(0f, y, 0f);
+            //
+            //     _symbols.Add(new SymbolDataPerIndex(symbolObject.transform,
+            //         symbolObject.AbilityData.CardType));
+            // }
+        }
 
-            for (int i = 0; i < totalSymbols; i++)
+        public void SetToken(List<TurnBaseManager.TokenItem> tokenItem)
+        {
+            for (int i = _symbols.Count - 1; i >= 0; i--)
             {
-                SymbolController symbolObject = Instantiate(symbolConfiguration[i], 
-                    transform, false);
+                Destroy(_symbols[i].SymbolTransform.gameObject);
+                _symbols.RemoveAt(i);
+            }
+            // int totalSymbols = Mathf.Max(visibleSymbols + bufferSymbols, 1);
 
-                float y = topY - i * symbolHeight;
-                symbolObject.transform.localPosition = new Vector3(0f, y, 0f);
+            for (int i = 0; i < tokenItem.Count; i++)
+            {
+                for (int j = 0; j < AllSymbolConfigurations.Count; j++)
+                {
+                    Debug.Log(j + " REELS");
+                    if (tokenItem[i].ability.CardType == AllSymbolConfigurations[j].AbilityData.CardType)
+                    {
+                        SymbolController symbolObject = Instantiate(AllSymbolConfigurations[j],
+                            transform, false);
 
-                _symbols.Add(new SymbolDataPerIndex(symbolObject.transform,
-                    symbolObject.AbilityData.CardType));
+                        float y = topY - i * symbolHeight;
+                        symbolObject.transform.localPosition = new Vector3(0f, y, 0f);
+
+                        _symbols.Add(new SymbolDataPerIndex(symbolObject.transform,
+                            symbolObject.AbilityData.CardType));
+                        break;
+                    }
+                }
             }
         }
 
@@ -118,6 +151,7 @@ namespace GGJ.Code.SlotMachine
 
         void MoveSymbols(float distance)
         {
+            if(_symbols.Count == 0) return;
             foreach (SymbolDataPerIndex symbol in _symbols)
             {
                 Vector3 pos = symbol.SymbolTransform.localPosition;

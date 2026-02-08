@@ -33,7 +33,7 @@ namespace GGJ.Code.UI
 
             if (iconImage) iconImage.sprite = data.Icon;
             if (nameText) nameText.text = data.AbilityName;
-            if (levelText) levelText.text = $"{data.AbilityRarity.ToString()}";
+            if (levelText) levelText.text = $"{data.AbilityRarity} - {data.Cost}c";
             if (descriptionText)
             {
                 string desc = data.Description;

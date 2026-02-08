@@ -5,6 +5,7 @@ namespace GGJ.Code.SlotMachine
 {
     public class SymbolController : MonoBehaviour
     {
+        public GameObject quad;
         public GameObject Outline;
 
         public SharedAbilityData AbilityData;
@@ -12,11 +13,17 @@ namespace GGJ.Code.SlotMachine
         void Start()
         {
             EnableOutline(false);
+            Renderer renderer = quad.GetComponent<Renderer>();
+            renderer.material.SetTexture("_BaseMap", AbilityData.AbilityTexture);
+
         }
 
         public void EnableOutline(bool setEnable)
         {
-            Outline.SetActive(setEnable);
+            if (Outline != null)
+            {
+                Outline.SetActive(setEnable);
+            }
         }
     }
 }

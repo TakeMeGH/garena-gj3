@@ -105,7 +105,7 @@ namespace GGJ.Code.SlotMachine
             Invoke(nameof(DelayStartSpinSfx), 0.25f);
             foreach (SlotMachineController machine in machines)
             {
-                machine.StartSpin();
+                machine.StartSpin(turnBaseManager.tokensInDeck);
             }
         }
 
@@ -129,6 +129,9 @@ namespace GGJ.Code.SlotMachine
                 }
                 // turnBaseManager.PlayerTurnDone();
                 
+            } else
+            {
+                Debug.LogWarning("This shouldn't happen!!");
             }
         }
     }

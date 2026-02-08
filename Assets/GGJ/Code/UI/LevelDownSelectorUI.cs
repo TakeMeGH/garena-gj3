@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 using GGJ.Code.Ability;
 using GGJ.Code.Utils.Singleton;
 
@@ -6,6 +7,9 @@ namespace GGJ.Code.UI
 {
     public class LevelDownSelectorUI : Singleton<LevelDownSelectorUI>
     {
+        public bool IsOpen { get; private set; }
+        public event Action Closed;
+
         [SerializeField]
         CanvasGroup canvasGroup;
 
@@ -20,6 +24,7 @@ namespace GGJ.Code.UI
         
         public void Show(SharedAbilityData[] abilities)
         {
+            IsOpen = true;
             if (abilities.Length != cards.Length)
             {
                 Debug.LogWarning("Abilities count does not match cards count!");
@@ -43,7 +48,10 @@ namespace GGJ.Code.UI
 
         void Hide()
         {
+            if (!IsOpen) return;
+            IsOpen = false;
             SetCanvasGroupState(false);
+            Closed?.Invoke();
         }
 
         void SetCanvasGroupState(bool state)
@@ -56,7 +64,20 @@ namespace GGJ.Code.UI
 
         void OnAbilityChosen(SharedAbilityData sharedAbility)
         {
-            Debug.Log($"Ability Chosen: {sharedAbility.AbilityName}");
+            TurnBaseManager turnBaseManager = TurnBaseManager.Instance;
+            if (turnBaseManager == null)
+            {
+                Debug.LogWarning("TurnBaseManager not found for purchase.");
+                return;
+            }
+
+            // if (!turnBaseManager.SpendCoins(sharedAbility.Cost))
+            // {
+            //     Debug.Log($"Not enough coins to buy {sharedAbility.AbilityName}.");
+            //     return;
+            // }
+
+            Debug.Log($"Ability Purchased: {sharedAbility.AbilityName}");
             // Handle the level down logic here or fire an event
             Hide();
         }

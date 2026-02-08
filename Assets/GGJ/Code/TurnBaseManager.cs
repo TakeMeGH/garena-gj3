@@ -1,5 +1,7 @@
 using System.Collections;
+using GGJ.Code.Ability;
 using GGJ.Code.SlotMachine;
+using GGJ.Code.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +13,8 @@ using System.Runtime.ExceptionServices;
 
 public class TurnBaseManager : MonoBehaviour
 {
+    public static TurnBaseManager Instance { get; private set; }
+
     public Animator shopPanel;
     public Animator gameOverPanel;
     public TMP_Text waveReachedText;
@@ -20,9 +24,10 @@ public class TurnBaseManager : MonoBehaviour
     [System.Serializable]
     public class Enemy
     {
-        public bool isZombiebot = false;
+        public GameObject prefab;
         public float health = 10;
         public float damage = 3;
+        public int coinReward = 1;
     }
 
     public Enemy[] enemies;
@@ -45,13 +50,26 @@ public class TurnBaseManager : MonoBehaviour
     [SerializeField]
     Slider enemyHealthBar;
     
-
     private GameObject instantiatedEnemy;
     private int currentWave = 1;
     private bool playerTurnDone = false; // temporary to wait until player done attacking from slot
     private bool shopDone = false;
     private float playerMaxHealth;
     private int coin;
+    private bool waitingForWaveUI;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public GameObject emptyDraggable;
 
     public SharedAbilityData[] allTokenAbility;
@@ -73,7 +91,6 @@ public class TurnBaseManager : MonoBehaviour
     private float playerDamageToEnemy;
 
 
-
     void Start()
     {
         for (int i = 0; i < 16; i++)
@@ -92,6 +109,7 @@ public class TurnBaseManager : MonoBehaviour
         {
             return;
         }
+
         SpawnEnemyForWave();
         UpdatePlayerHealthUI();
 
@@ -198,6 +216,7 @@ public class TurnBaseManager : MonoBehaviour
         }
 
         Debug.Log("test");
+        //PlayerAttackAnimation(10);
         yield return new WaitUntil(() => playerTurnDone);
         playerTurnDone = false;
         Debug.Log("player done move");
@@ -235,6 +254,9 @@ public class TurnBaseManager : MonoBehaviour
             return;
         }
 
+        TextPopupManager.Instance.CreateDamagePopup(
+            instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), enemies[currentWave - 1].damage);
+
         playerHealth -= enemies[currentWave - 1].damage;
         UpdatePlayerHealthUI();
         if (playerHealth <= 0)
@@ -250,7 +272,10 @@ public class TurnBaseManager : MonoBehaviour
     public void EnemyTakeDamage()
     {
 
-        enemyHealth -= playerDamageToEnemy; // damage
+        if (instantiatedEnemy)
+            TextPopupManager.Instance.CreateDamagePopup(
+                instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), playerDamageToEnemy);
+        enemyHealth -= playerDamageToEnemy;
         UpdateEnemyHealthUI();
         Debug.Log("Enemy Take Damage " + enemyHealth);
         if (enemyHealth <= 0)
@@ -260,6 +285,7 @@ public class TurnBaseManager : MonoBehaviour
                 Destroy(instantiatedEnemy);
             }
 
+            GainCoin(enemies[currentWave - 1].coinReward);
             currentWave++;
             if (currentWave <= enemies.Length)
             {
@@ -267,15 +293,48 @@ public class TurnBaseManager : MonoBehaviour
             }
             else
             {
+                // waitingForWaveUI = true;
                 StopAllCoroutines();
+                StartCoroutine(HandleWaveClear());
             }
+        }
+
+        PlayerTurnDone();
+    }
+
+    IEnumerator HandleWaveClear()
+    {
+        // LevelDownSelectorUI selector = LevelDownSelectorUI.Instance;
+        // if (selector != null)
+        // {
+        //     AbilityShopManager shop = AbilityShopManager.Instance;
+        //     SharedAbilityData[] options = shop != null ? shop.GenerateShopOptions() : new SharedAbilityData[0];
+        //     bool closed = false;
+        //     System.Action onClosed = () => closed = true;
+        //     selector.Closed += onClosed;
+        //     selector.Show(options);
+        //     yield return new WaitUntil(() => closed);
+        //     selector.Closed -= onClosed;
+        // }
+        yield return null;
+        waitingForWaveUI = false;
+        currentWave++;
+        if (currentWave <= enemies.Length)
+        {
+            SpawnEnemyForWave();
+            StartCoroutine(PlayerTurn());
+        }
+        else
+        {
+            StopAllCoroutines();
         }
     }
 
     void SpawnEnemyForWave()
     {
-        instantiatedEnemy =
-            Instantiate((enemies[currentWave - 1].isZombiebot) ? zombotPrefab : batbotPrefab, enemyParent);
+        playerHealth = playerMaxHealth;
+        UpdatePlayerHealthUI();
+        instantiatedEnemy = Instantiate(enemies[currentWave - 1].prefab, enemyParent);
         enemyHealthBar = instantiatedEnemy.GetComponentInChildren<Slider>();
         enemyHealth = enemies[currentWave - 1].health;
         UpdateEnemyHealthUI();
