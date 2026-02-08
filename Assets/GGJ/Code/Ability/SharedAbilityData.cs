@@ -28,6 +28,8 @@ namespace GGJ.Code.Ability
 
         [SerializeField]
         Sprite icon;
+        
+        public Texture AbilityTexture;
 
         [SerializeField]
         string abilityName;

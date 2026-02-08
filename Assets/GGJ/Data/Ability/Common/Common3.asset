@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Common3
   m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.Ability.SharedAbilityData
   cardType: 3
-  icon: {fileID: -3168733581550749585, guid: f7043b7291f49844b9671b3d3dedcbb5, type: 3}
+  icon: {fileID: 21300000, guid: 50b407f2f9894c94da94895bd627f464, type: 3}
+  AbilityTexture: {fileID: 2800000, guid: 50b407f2f9894c94da94895bd627f464, type: 3}
   abilityName: Common3
   abilityRarity: 0
   description: Reduce whip damage from {x0} to {y0} and reduce whip range from {x1}

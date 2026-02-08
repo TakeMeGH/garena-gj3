@@ -182,7 +182,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4d7ed702d36cc6e428febfd1927601da, type: 2}
+  - {fileID: 2895064947943234598, guid: e7170b34430d5ef44bb8add062be7881, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -240,4 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1769b8f9fb0044b886cbafdb50da87c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GGJ.Code.SlotMachine.SymbolController
+  quad: {fileID: 9136829233176401387}
   Outline: {fileID: 5051403925289667325}
+  AbilityData: {fileID: 0}
