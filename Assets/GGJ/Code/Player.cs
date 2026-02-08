@@ -3,10 +3,6 @@ using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
-using System;
-using GGJ.Code.UI;
-using GGJ.Code.Utils.LevelManager;
 
 
 public class Player : MonoBehaviour
