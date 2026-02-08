@@ -37,6 +37,9 @@ namespace GGJ.Code.Ability
         [SerializeField]
         AbilityRarity abilityRarity;
 
+        [SerializeField, Min(0)]
+        int cost = 1;
+
         [SerializeField, TextArea]
         string description;
 
@@ -49,6 +52,7 @@ namespace GGJ.Code.Ability
         public Sprite Icon => icon;
         public string AbilityName => abilityName;
         public AbilityRarity AbilityRarity => abilityRarity;
+        public int Cost => cost;
         public string Description => description;
         public int Damage => damage;
         public int ExtraMultiplier => extraMultiplier;

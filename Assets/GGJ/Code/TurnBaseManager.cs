@@ -1,4 +1,5 @@
 using System.Collections;
+using GGJ.Code.Ability;
 using GGJ.Code.SlotMachine;
 using GGJ.Code.UI;
 using TMPro;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 
 public class TurnBaseManager : MonoBehaviour
 {
+    public static TurnBaseManager Instance { get; private set; }
+
     public Animator gameOverPanel;
     public TMP_Text waveReachedText;
 
@@ -16,6 +19,7 @@ public class TurnBaseManager : MonoBehaviour
         public GameObject prefab;
         public float health = 10;
         public float damage = 3;
+        public int coinReward = 1;
     }
 
     public Enemy[] enemies;
@@ -37,17 +41,34 @@ public class TurnBaseManager : MonoBehaviour
     [SerializeField]
     Slider enemyHealthBar;
 
+    [SerializeField]
+    TMP_Text coinText;
 
     private GameObject instantiatedEnemy;
     private int wave = 1;
     private bool playerTurnDone = false; // temporary to wait until player done attacking from slot
     private float playerMaxHealth;
+    private int coin;
+    private bool waitingForWaveUI;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerMaxHealth = playerHealth;
+        UpdateCoinUI();
 
         // Instantiate enemy
         if (wave > enemies.Length)
@@ -64,6 +85,7 @@ public class TurnBaseManager : MonoBehaviour
 
     IEnumerator PlayerTurn()
     {
+        if (waitingForWaveUI) yield break;
         if (wave > enemies.Length)
         {
             yield break;
@@ -91,6 +113,7 @@ public class TurnBaseManager : MonoBehaviour
 
     IEnumerator EnemyTurn()
     {
+        if (waitingForWaveUI) yield break;
         if (wave > enemies.Length)
         {
             yield break;
@@ -141,15 +164,41 @@ public class TurnBaseManager : MonoBehaviour
                 Destroy(instantiatedEnemy);
             }
 
-            wave++;
-            if (wave <= enemies.Length)
+            AddCoins(enemies[wave - 1].coinReward);
+            if (!waitingForWaveUI)
             {
-                SpawnEnemyForWave();
-            }
-            else
-            {
+                // waitingForWaveUI = true;
                 StopAllCoroutines();
+                StartCoroutine(HandleWaveClear());
             }
+        }
+    }
+
+    IEnumerator HandleWaveClear()
+    {
+        // LevelDownSelectorUI selector = LevelDownSelectorUI.Instance;
+        // if (selector != null)
+        // {
+        //     AbilityShopManager shop = AbilityShopManager.Instance;
+        //     SharedAbilityData[] options = shop != null ? shop.GenerateShopOptions() : new SharedAbilityData[0];
+        //     bool closed = false;
+        //     System.Action onClosed = () => closed = true;
+        //     selector.Closed += onClosed;
+        //     selector.Show(options);
+        //     yield return new WaitUntil(() => closed);
+        //     selector.Closed -= onClosed;
+        // }
+        yield return null;
+        waitingForWaveUI = false;
+        wave++;
+        if (wave <= enemies.Length)
+        {
+            SpawnEnemyForWave();
+            StartCoroutine(PlayerTurn());
+        }
+        else
+        {
+            StopAllCoroutines();
         }
     }
 
@@ -178,5 +227,34 @@ public class TurnBaseManager : MonoBehaviour
         float enemyMaxHealth = enemies[wave - 1].health;
         enemyHealthBar.maxValue = enemyMaxHealth;
         enemyHealthBar.value = Mathf.Clamp(enemyHealth, 0f, enemyMaxHealth);
+    }
+
+    void AddCoins(int amount)
+    {
+        if (amount <= 0) return;
+        coin += amount;
+        UpdateCoinUI();
+    }
+
+    void UpdateCoinUI()
+    {
+        if (!coinText) return;
+        coinText.text = "Coin: " + coin.ToString();
+    }
+
+    public int Coin => coin;
+
+    public bool CanAfford(int cost)
+    {
+        return cost <= coin;
+    }
+
+    public bool SpendCoins(int cost)
+    {
+        if (cost <= 0) return true;
+        if (!CanAfford(cost)) return false;
+        coin -= cost;
+        UpdateCoinUI();
+        return true;
     }
 }

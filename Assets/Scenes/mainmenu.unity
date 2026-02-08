@@ -193,7 +193,7 @@ Animation:
   m_GameObject: {fileID: 362758101}
   m_Enabled: 1
   serializedVersion: 4
-  m_Animation: {fileID: 0}
+  m_Animation: {fileID: 7400000, guid: c4c1d15cb50a8c44dbd338a3532a7a1f, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: c4c1d15cb50a8c44dbd338a3532a7a1f, type: 2}
   m_WrapMode: 0
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Slotass shitfuck
+  m_text: slotted plot plotted slot
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7a9f608f72b23164c97ab9bd5252bef1, type: 2}
   m_sharedMaterial: {fileID: -7152540593994397939, guid: 7a9f608f72b23164c97ab9bd5252bef1, type: 2}
@@ -285,8 +285,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 212.8
-  m_fontSizeBase: 212.8
+  m_fontSize: 128
+  m_fontSizeBase: 128
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -476,7 +476,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1807049620}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1339582815}
+        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_MethodName: GoToGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1067128747
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -576,6 +588,7 @@ GameObject:
   - component: {fileID: 1339582814}
   - component: {fileID: 1339582813}
   - component: {fileID: 1339582812}
+  - component: {fileID: 1339582815}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -667,6 +680,87 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1339582815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339582810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10dd340b18fc7204b9b0ba8d28c8b3e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
+--- !u!1001 &1443220447
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -57.93533
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -6.79763
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 50.33688
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 552302145586861947, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1616390825308625946, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_Name
+      value: SingletonManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461824022744157671, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5461824022744157671, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+    - target: {fileID: 5910450190884465720, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 07705f975f03b734cadd8aa2f7acac91, type: 3}
+    - target: {fileID: 5910450190884465720, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 54b4a20aa051a81418b58cd8c1b43630, type: 3}
 --- !u!1 &1470135119
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,3 +1444,4 @@ SceneRoots:
   - {fileID: 1956505070}
   - {fileID: 362758100}
   - {fileID: 1284064680}
+  - {fileID: 1443220447}

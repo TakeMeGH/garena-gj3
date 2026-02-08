@@ -17,6 +17,7 @@ MonoBehaviour:
   AbilityTexture: {fileID: 2800000, guid: fa55e3f1ff6c6294693271d004dce6b1, type: 3}
   abilityName: Whip
   abilityRarity: 2
+  cost: 9
   description: Reduce whip damage from {x0} to {y0} and reduce whip range from {x1}
     to {y1}
   damage: 30
