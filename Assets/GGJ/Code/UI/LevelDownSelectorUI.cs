@@ -71,11 +71,11 @@ namespace GGJ.Code.UI
                 return;
             }
 
-            if (!turnBaseManager.SpendCoins(sharedAbility.Cost))
-            {
-                Debug.Log($"Not enough coins to buy {sharedAbility.AbilityName}.");
-                return;
-            }
+            // if (!turnBaseManager.SpendCoins(sharedAbility.Cost))
+            // {
+            //     Debug.Log($"Not enough coins to buy {sharedAbility.AbilityName}.");
+            //     return;
+            // }
 
             Debug.Log($"Ability Purchased: {sharedAbility.AbilityName}");
             // Handle the level down logic here or fire an event

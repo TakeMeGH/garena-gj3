@@ -67,11 +67,13 @@ MonoBehaviour:
   spinSpeed: 8
   stopDuration: 0.1
   nextActionDelayDuration: 0.5
-  symbolConfiguration:
-  - {fileID: 6344830212145357220, guid: f549cd47051a06149b84f5d3b1455a27, type: 3}
-  - {fileID: 6344830212145357220, guid: ae63c8c14d4f41e4f87449ccd9d69645, type: 3}
-  - {fileID: 6344830212145357220, guid: fc75adc1df2730a4080eb3713b298bb4, type: 3}
+  AllSymbolConfigurations:
+  - {fileID: 6028931992740127849, guid: 23d3f92b0e14a374e90b4ccacf1760ae, type: 3}
+  - {fileID: 3745973548511793624, guid: 26aa68e4274a98b418123ac08a8ac154, type: 3}
   - {fileID: 6344830212145357220, guid: 584c88b15cbdb37408fa897e6e12939e, type: 3}
+  - {fileID: 6344830212145357220, guid: ae63c8c14d4f41e4f87449ccd9d69645, type: 3}
+  - {fileID: 6344830212145357220, guid: f549cd47051a06149b84f5d3b1455a27, type: 3}
+  - {fileID: 6344830212145357220, guid: fc75adc1df2730a4080eb3713b298bb4, type: 3}
 --- !u!1001 &1809077080137376593
 PrefabInstance:
   m_ObjectHideFlags: 0

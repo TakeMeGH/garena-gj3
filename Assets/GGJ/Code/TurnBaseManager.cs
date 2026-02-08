@@ -48,10 +48,7 @@ public class TurnBaseManager : MonoBehaviour
 
     [SerializeField]
     Slider enemyHealthBar;
-
-    [SerializeField]
-    TMP_Text coinText;
-
+    
     private GameObject instantiatedEnemy;
     private int currentWave = 1;
     private bool playerTurnDone = false; // temporary to wait until player done attacking from slot
@@ -103,7 +100,6 @@ public class TurnBaseManager : MonoBehaviour
         }
 
         playerMaxHealth = playerHealth;
-        UpdateCoinUI();
 
         // Instantiate enemy
         if (currentWave > enemies.Length)
@@ -245,7 +241,7 @@ public class TurnBaseManager : MonoBehaviour
         }
 
         TextPopupManager.Instance.CreateDamagePopup(
-            instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), enemies[wave - 1].damage);
+            instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), enemies[currentWave - 1].damage);
 
         playerHealth -= enemies[currentWave - 1].damage;
         UpdatePlayerHealthUI();
@@ -274,7 +270,7 @@ public class TurnBaseManager : MonoBehaviour
                 Destroy(instantiatedEnemy);
             }
 
-            AddCoins(enemies[wave - 1].coinReward);
+            GainCoin(enemies[currentWave - 1].coinReward);
             currentWave++;
             if (currentWave <= enemies.Length)
             {
@@ -305,8 +301,8 @@ public class TurnBaseManager : MonoBehaviour
         // }
         yield return null;
         waitingForWaveUI = false;
-        wave++;
-        if (wave <= enemies.Length)
+        currentWave++;
+        if (currentWave <= enemies.Length)
         {
             SpawnEnemyForWave();
             StartCoroutine(PlayerTurn());

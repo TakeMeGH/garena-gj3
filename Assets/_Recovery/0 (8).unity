@@ -3047,7 +3047,7 @@ MonoBehaviour:
   shopPanel: {fileID: 0}
   gameOverPanel: {fileID: 1749163952}
   waveReachedText: {fileID: 1482921957}
-  waveReachedTextWhenGameover: {fileID: 1964754184}
+  waveReachedTextWhenGameover: {fileID: 0}
   coinText: {fileID: 0}
   enemies:
   - prefab: {fileID: 5815725589758524971, guid: 9ab763b7f244ab34eb35fc9b5af4c92b, type: 3}

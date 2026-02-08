@@ -33,12 +33,14 @@ namespace GGJ.Code.SlotMachine
 
         readonly List<SymbolController> _outlinedSymbol = new();
 
-        public void StartSpin()
+        public void StartSpin(TurnBaseManager.TokenItem[][] tokenItem)
         {
             if (_isSpinning || reels == null || reels.Length == 0)
             {
                 return;
             }
+            
+            InitReels(tokenItem);
 
             foreach (SymbolController symbolController in _outlinedSymbol)
             {
@@ -46,6 +48,20 @@ namespace GGJ.Code.SlotMachine
             }
 
             StartCoroutine(SpinRoutine());
+        }
+
+        void InitReels(TurnBaseManager.TokenItem[][] tokenItem)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                List<TurnBaseManager.TokenItem> reelTokens = new();
+                for (int i = 0; i < 4; i++)
+                {
+                    reelTokens.Add(tokenItem[i][j]);
+                }
+
+                reels[j].SetToken(reelTokens);
+            }
         }
 
         public void HandleStopInput()
