@@ -2137,7 +2137,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -10.000158}
+  m_AnchoredPosition: {x: 0, y: -10.000183}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &886268322
@@ -3067,6 +3067,7 @@ GameObject:
   - component: {fileID: 1109456212}
   - component: {fileID: 1109456211}
   - component: {fileID: 1109456210}
+  - component: {fileID: 1109456213}
   m_Layer: 5
   m_Name: Retry Button
   m_TagString: Untagged
@@ -3138,9 +3139,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GGJ.Code.Utils.LevelManager.InGameManager, Assembly-CSharp
-        m_MethodName: Restart
+      - m_Target: {fileID: 1109456213}
+        m_TargetAssemblyTypeName: RetryButton, Assembly-CSharp
+        m_MethodName: Retry
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3188,6 +3189,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109456208}
   m_CullTransparentMesh: 1
+--- !u!114 &1109456213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109456208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7b0a767c6e535c4fb5ceed1bdd10591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RetryButton
 --- !u!1 &1128737471
 GameObject:
   m_ObjectHideFlags: 0
