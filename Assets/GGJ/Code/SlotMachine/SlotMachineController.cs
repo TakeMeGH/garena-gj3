@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using GGJ.Code.Ability;
 using GGJ.Code.Audio;
+using GGJ.Code.UI;
 using UnityEngine;
 
 namespace GGJ.Code.SlotMachine
@@ -127,6 +128,12 @@ namespace GGJ.Code.SlotMachine
                         continue;
                     symbolController.EnableOutline(true);
                     _outlinedSymbol.Add(symbolController);
+                    int damage = GetSymbolDamage(result);
+                    TextPopupManager.Instance.CreateCustomCriticalPopup(
+                        result.Symbol.transform.position +
+                        new Vector3(0, 0.5f, 0), damage.ToString(),
+                        Color.white * 3);
+
                     AudioManager.Instance.PlaySfx("CoinDrop");
                     yield return new WaitForSeconds(0.2f);
                 }
@@ -151,8 +158,11 @@ namespace GGJ.Code.SlotMachine
             AbilityCardType previousType = AbilityCardType.None;
             bool hasPrevious = false;
 
+            int i = -1;
+            int cntCrit = 2;
             foreach (ReelController.SymbolResult result in results)
             {
+                i++;
                 if (result.SymbolType < 0)
                 {
                     if (runLength > 0)
@@ -174,10 +184,20 @@ namespace GGJ.Code.SlotMachine
                 }
                 else
                 {
+                    if (runLength > 1)
+                    {
+                        TextPopupManager.Instance.CreateCustomCriticalPopup(
+                            results[i - 1].Symbol.transform.position +
+                            new Vector3(0, cntCrit * 0.5f, 0), "Critical " + (runDamage * runLength),
+                            Color.red * 3);
+                        cntCrit++;
+                    }
+
                     totalDamage += runDamage * runLength;
                     runDamage = damage;
                     runLength = 1;
                 }
+
                 runLength += GetExtraMultiplier(result);
 
                 previousType = result.SymbolType;
@@ -186,6 +206,15 @@ namespace GGJ.Code.SlotMachine
 
             if (runLength > 0)
             {
+                if (runLength > 1)
+                {
+                    TextPopupManager.Instance.CreateCustomCriticalPopup(
+                        results[^1].Symbol.transform.position +
+                        new Vector3(0, cntCrit * 0.5f, 0), "Critical " + (runDamage * runLength),
+                        Color.red * 3);
+                    cntCrit++;
+                }
+
                 totalDamage += runDamage * runLength;
             }
 
@@ -205,7 +234,7 @@ namespace GGJ.Code.SlotMachine
 
             return 0;
         }
-        
+
         static int GetExtraMultiplier(ReelController.SymbolResult result)
         {
             if (result.Symbol &&
@@ -217,6 +246,5 @@ namespace GGJ.Code.SlotMachine
 
             return 0;
         }
-
     }
 }

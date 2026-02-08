@@ -1,5 +1,6 @@
 using System.Collections;
 using GGJ.Code.SlotMachine;
+using GGJ.Code.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,6 +54,7 @@ public class TurnBaseManager : MonoBehaviour
         {
             return;
         }
+
         SpawnEnemyForWave();
         UpdatePlayerHealthUI();
 
@@ -111,6 +113,9 @@ public class TurnBaseManager : MonoBehaviour
             return;
         }
 
+        TextPopupManager.Instance.CreateDamagePopup(
+            instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), enemies[wave - 1].damage);
+
         playerHealth -= enemies[wave - 1].damage;
         UpdatePlayerHealthUI();
         if (playerHealth <= 0)
@@ -123,6 +128,9 @@ public class TurnBaseManager : MonoBehaviour
 
     public void EnemyTakeDamage(float damage)
     {
+        if (instantiatedEnemy)
+            TextPopupManager.Instance.CreateDamagePopup(
+                instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), damage);
         enemyHealth -= damage;
         UpdateEnemyHealthUI();
         Debug.Log("Enemy Take Damage " + enemyHealth);

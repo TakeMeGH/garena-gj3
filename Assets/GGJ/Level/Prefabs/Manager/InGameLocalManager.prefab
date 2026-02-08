@@ -113,7 +113,7 @@ MonoBehaviour:
   NestWaitingPool: 1
   MutualizeWaitingPools: 1
   PoolCanExpand: 1
-  Lifetime: {x: 2, y: 2}
+  Lifetime: {x: 1, y: 1}
   SpawnOffsetMin: {x: 0, y: 0, z: 0}
   SpawnOffsetMax: {x: 0, y: 0, z: 0}
   AnimateMovement: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
   AlignmentMode: 0
   FixedAlignment: {x: 0, y: 1, z: 0}
   AlwaysFaceCamera: 1
-  AutoGrabMainCameraOnStart: 1
+  AutoGrabMainCameraOnStart: 0
   TargetCamera: {fileID: 0}
   AnimateScale: 1
   RemapScaleZero: {x: 0, y: 0}
@@ -478,7 +478,7 @@ MonoBehaviour:
   AlignmentMode: 0
   FixedAlignment: {x: 0, y: 1, z: 0}
   AlwaysFaceCamera: 1
-  AutoGrabMainCameraOnStart: 1
+  AutoGrabMainCameraOnStart: 0
   TargetCamera: {fileID: 0}
   AnimateScale: 1
   RemapScaleZero: {x: 0, y: 0}
@@ -1081,7 +1081,7 @@ MonoBehaviour:
         Label: Floating Text
         OriginalLabel: Floating Text
         ChannelMode: 0
-        Channel: 0
+        Channel: 1
         MMChannelDefinition: {fileID: 0}
         Chance: 100
         Timing:
