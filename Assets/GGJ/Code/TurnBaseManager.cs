@@ -34,6 +34,7 @@ public class TurnBaseManager : MonoBehaviour
     public GameObject batbotPrefab;
     public GameObject zombotPrefab;
     public Transform enemyParent;
+    public Animator playerParent;
 
     [SerializeField]
     SlotMachineManager slotMachineManager;
@@ -68,6 +69,8 @@ public class TurnBaseManager : MonoBehaviour
     public GameObject deckSlotPrefab;
     private List<DeckSlot> deckSlots = new List<DeckSlot>();
     public DeckSlot inventorySlot;
+
+    private float playerDamageToEnemy;
 
 
 
@@ -160,6 +163,7 @@ public class TurnBaseManager : MonoBehaviour
 
         shopPanel.Play("shopPanelHide");
         waveReachedText.text = "Wave Reached: " + currentWave.ToString();
+        Debug.Log("shop panel hidden");
         StartCoroutine(PlayerTurn());
     }
 
@@ -172,6 +176,7 @@ public class TurnBaseManager : MonoBehaviour
 
     IEnumerator PlayerTurn()
     {
+        Debug.Log("player turn");
         if (currentWave > enemies.Length)
         {
             yield break;
@@ -192,14 +197,26 @@ public class TurnBaseManager : MonoBehaviour
             playerTurnDone = true;
         }
 
+        Debug.Log("test");
         yield return new WaitUntil(() => playerTurnDone);
         playerTurnDone = false;
+        Debug.Log("player done move");
         yield return new WaitForSeconds(1f);
         StartCoroutine(EnemyTurn());
     }
 
+    public void PlayerAttackAnimation(float _totalTurnDamage){
+        playerParent.Play("PlayerParentAtk"); // in this animation, trigger PlayerTurnDone() (function below)
+        float playerDamageToEnemy = _totalTurnDamage;
+    }
+
+    public void PlayerTurnDone(){ // called by PlayerParent's animation trigger
+        playerTurnDone = true;
+    }
+
     IEnumerator EnemyTurn()
     {
+        Debug.Log("enemy turn");
         if (currentWave > enemies.Length)
         {
             yield break;
@@ -210,10 +227,6 @@ public class TurnBaseManager : MonoBehaviour
         StartCoroutine(PlayerTurn());
     }
 
-    public void PlayerTurnDone()
-    {
-        playerTurnDone = true;
-    }
 
     public void PlayerTakeDamage()
     {
@@ -234,9 +247,10 @@ public class TurnBaseManager : MonoBehaviour
         }
     }
 
-    public void EnemyTakeDamage(float damage)
+    public void EnemyTakeDamage()
     {
-        enemyHealth -= damage;
+
+        enemyHealth -= playerDamageToEnemy; // damage
         UpdateEnemyHealthUI();
         Debug.Log("Enemy Take Damage " + enemyHealth);
         if (enemyHealth <= 0)

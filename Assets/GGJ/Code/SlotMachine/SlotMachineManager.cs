@@ -122,9 +122,13 @@ namespace GGJ.Code.SlotMachine
             {
                 if (_totalTurnDamage > 0)
                 {
-                    turnBaseManager.EnemyTakeDamage(_totalTurnDamage);
+                    turnBaseManager.PlayerAttackAnimation(_totalTurnDamage);
+                } else
+                {
+                    Debug.LogWarning("This shouldn't happen!!");
                 }
-                turnBaseManager.PlayerTurnDone();
+                // turnBaseManager.PlayerTurnDone();
+                
             }
         }
     }
