@@ -6,7 +6,7 @@ namespace GGJ.Code.UI
     {
         public void GoToGame()
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("TurnBasedSlot 1");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("TurnBasedSlot");
         }
     }
 }

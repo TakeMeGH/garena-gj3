@@ -35,12 +35,13 @@ namespace GGJ.Code.SlotMachine
 
         public void StartSpin(TurnBaseManager.TokenItem[][] tokenItem)
         {
+            InitReels(tokenItem);
+            
             if (_isSpinning || reels == null || reels.Length == 0)
             {
                 return;
             }
             
-            InitReels(tokenItem);
 
             foreach (SymbolController symbolController in _outlinedSymbol)
             {

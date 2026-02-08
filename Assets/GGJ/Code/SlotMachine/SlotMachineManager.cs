@@ -93,10 +93,12 @@ namespace GGJ.Code.SlotMachine
 
         public void BeginPlayerTurn()
         {
+            Debug.Log("Begin PLayer Turn");
             if (machines == null || machines.Length == 0) return;
             _totalTurnDamage = 0;
             _currentMachineIndex = 0;
             _isLastMachine = false;
+            Debug.Log("Reset All Machines");
             RestartAllMachine();
         }
 
@@ -105,6 +107,7 @@ namespace GGJ.Code.SlotMachine
             Invoke(nameof(DelayStartSpinSfx), 0.25f);
             foreach (SlotMachineController machine in machines)
             {
+                Debug.Log("Start Spin");
                 machine.StartSpin(turnBaseManager.tokensInDeck);
             }
         }

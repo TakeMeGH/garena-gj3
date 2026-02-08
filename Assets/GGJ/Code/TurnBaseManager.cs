@@ -30,6 +30,16 @@ public class TurnBaseManager : MonoBehaviour
         public int coinReward = 1;
     }
 
+    [System.Serializable]
+    public class BuyPanel
+    {
+        public Button button;
+        public Image icon;
+        public TMP_Text costText;
+        public SharedAbilityData ability;
+    }
+
+    public BuyPanel[] buyPanels;
     public Enemy[] enemies;
 
     public float playerHealth = 10f;
@@ -48,7 +58,7 @@ public class TurnBaseManager : MonoBehaviour
 
     [SerializeField]
     Slider enemyHealthBar;
-    
+
     private GameObject instantiatedEnemy;
     private int currentWave = 1;
     private bool playerTurnDone = false; // temporary to wait until player done attacking from slot
@@ -72,20 +82,24 @@ public class TurnBaseManager : MonoBehaviour
     public GameObject emptyDraggable;
 
     public SharedAbilityData[] allTokenAbility;
+
     public class TokenItem
     {
         public SharedAbilityData ability;
+
         public TokenItem(SharedAbilityData ability)
         {
             this.ability = ability;
         }
     }
+
     public List<TokenItem> tokensInInventory = new List<TokenItem>();
     public TokenItem[][] tokensInDeck = new TokenItem[4][];
     public Transform deckSlotParent; // contains 16 children : deck slots
     public GameObject deckSlotPrefab;
     private List<DeckSlot> deckSlots = new List<DeckSlot>();
     public DeckSlot inventorySlot;
+    int _nextInjectIndex;
 
 
     void Start()
@@ -130,10 +144,11 @@ public class TurnBaseManager : MonoBehaviour
                 newDraggable.GetComponent<Draggable>().tokenItem = tokensInDeck[i][j];
             }
         }
+
         //Start turn base loop
         StartCoroutine(Shop());
     }
-    
+
     // Adds a token to inventory from SharedAbilityData
     public void AddTokenToInventory(SharedAbilityData abilityData)
     {
@@ -145,6 +160,7 @@ public class TurnBaseManager : MonoBehaviour
 
     IEnumerator Shop()
     {
+        ResetShop();
         // Player do shopping & picking deck
         shopPanel.Play("shopPanelShow");
         yield return new WaitUntil(() => shopDone);
@@ -164,7 +180,8 @@ public class TurnBaseManager : MonoBehaviour
             for (int j = 0; j < 4; j++)
             {
                 int idx = i * 4 + j;
-                if (idx < deckSlots.Count && deckSlots[idx].occupied != null && deckSlots[idx].occupied.tokenItem != null)
+                if (idx < deckSlots.Count && deckSlots[idx].occupied != null &&
+                    deckSlots[idx].occupied.tokenItem != null)
                 {
                     tokensInDeck[i][j] = deckSlots[idx].occupied.tokenItem;
                 }
@@ -181,7 +198,50 @@ public class TurnBaseManager : MonoBehaviour
         StartCoroutine(PlayerTurn());
     }
 
-    
+    void ResetShop()
+    {
+        SharedAbilityData[] data = AbilityShopManager.Instance.GenerateShopOptions();
+        for (int i = 0; i < buyPanels.Length; i++)
+        {
+            int index = i; // ✅ capture value
+
+            buyPanels[i].button.onClick.RemoveAllListeners();
+            buyPanels[i].ability = data[i];
+            buyPanels[i].costText.text = data[i].Cost.ToString();
+            buyPanels[i].icon.sprite = data[i].Icon;
+            buyPanels[i].button.onClick.AddListener(() => BuyAbility(data[index]));
+        }
+    }
+
+    void BuyAbility(SharedAbilityData abilityData)
+    {
+        if (abilityData.Cost > coin) return;
+        GainCoin(-abilityData.Cost);
+        InjectAbilityIntoInventory(abilityData);
+        ResetShop();
+    }
+
+    void InjectAbilityIntoInventory(SharedAbilityData abilityData)
+    {
+        if (abilityData == null || inventorySlot == null) return;
+
+        TokenItem token = new TokenItem(abilityData);
+        tokensInInventory.Add(token);
+
+        GameObject newDraggable = Instantiate(emptyDraggable);
+        newDraggable.transform.SetParent(inventorySlot.transform);
+        newDraggable.transform.localPosition = Vector3.zero;
+        Draggable draggable = newDraggable.GetComponent<Draggable>();
+        draggable.tokenItem = token;
+        inventorySlot.occupieds.Add(draggable);
+
+        Image image = newDraggable.GetComponent<Image>();
+        if (image != null)
+        {
+            image.sprite = abilityData.Icon;
+        }
+    }
+
 
     public void ShopDone()
     {
@@ -250,7 +310,7 @@ public class TurnBaseManager : MonoBehaviour
             gameOverPanel.gameObject.SetActive(true);
             gameOverPanel.Play("gameOverShow");
             waveReachedTextWhenGameover.text = "Wave Reached: " + currentWave.ToString();
-            GainCoin(currentWave*100);
+            GainCoin(currentWave * 100);
             Destroy(player);
         }
     }
@@ -321,6 +381,7 @@ public class TurnBaseManager : MonoBehaviour
         enemyHealthBar = instantiatedEnemy.GetComponentInChildren<Slider>();
         enemyHealth = enemies[currentWave - 1].health;
         UpdateEnemyHealthUI();
+        StartCoroutine(Shop());
     }
 
     void UpdatePlayerHealthUI()
@@ -349,5 +410,4 @@ public class TurnBaseManager : MonoBehaviour
         coin += amount;
         coinText.text = "Coin: " + coin.ToString();
     }
-    
 }

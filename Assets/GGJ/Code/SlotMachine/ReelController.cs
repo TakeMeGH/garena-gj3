@@ -80,6 +80,7 @@ namespace GGJ.Code.SlotMachine
 
         public void SetToken(List<TurnBaseManager.TokenItem> tokenItem)
         {
+            Debug.Log("SET TOKEN " + tokenItem.GetType());
             for (int i = _symbols.Count - 1; i >= 0; i--)
             {
                 Destroy(_symbols[i].SymbolTransform.gameObject);
@@ -91,7 +92,6 @@ namespace GGJ.Code.SlotMachine
             {
                 for (int j = 0; j < AllSymbolConfigurations.Count; j++)
                 {
-                    Debug.Log(j + " REELS");
                     if (tokenItem[i].ability.CardType == AllSymbolConfigurations[j].AbilityData.CardType)
                     {
                         SymbolController symbolObject = Instantiate(AllSymbolConfigurations[j],

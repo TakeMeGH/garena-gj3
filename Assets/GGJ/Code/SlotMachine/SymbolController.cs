@@ -15,11 +15,11 @@ namespace GGJ.Code.SlotMachine
             EnableOutline(false);
             Renderer renderer = quad.GetComponent<Renderer>();
             renderer.material.SetTexture("_BaseMap", AbilityData.AbilityTexture);
-
         }
 
         public void EnableOutline(bool setEnable)
         {
+            if (Outline == null) return;
             Outline.SetActive(setEnable);
         }
     }
