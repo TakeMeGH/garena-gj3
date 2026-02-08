@@ -5,13 +5,21 @@ using GGJ.Code.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
+using System.Collections.Generic;
+using GGJ.Code.Ability;
+using System.Runtime.ExceptionServices;
 
 public class TurnBaseManager : MonoBehaviour
 {
     public static TurnBaseManager Instance { get; private set; }
 
+    public Animator shopPanel;
     public Animator gameOverPanel;
     public TMP_Text waveReachedText;
+    public TMP_Text waveReachedTextWhenGameover;
+    public TMP_Text coinText;
 
     [System.Serializable]
     public class Enemy
@@ -45,8 +53,9 @@ public class TurnBaseManager : MonoBehaviour
     TMP_Text coinText;
 
     private GameObject instantiatedEnemy;
-    private int wave = 1;
+    private int currentWave = 1;
     private bool playerTurnDone = false; // temporary to wait until player done attacking from slot
+    private bool shopDone = false;
     private float playerMaxHealth;
     private int coin;
     private bool waitingForWaveUI;
@@ -63,15 +72,41 @@ public class TurnBaseManager : MonoBehaviour
         }
     }
 
+    public GameObject emptyDraggable;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public SharedAbilityData[] allTokenAbility;
+    public class TokenItem
+    {
+        public SharedAbilityData ability;
+        public TokenItem(SharedAbilityData ability)
+        {
+            this.ability = ability;
+        }
+    }
+    public List<TokenItem> tokensInInventory = new List<TokenItem>();
+    public TokenItem[][] tokensInDeck = new TokenItem[4][];
+    public Transform deckSlotParent; // contains 16 children : deck slots
+    public GameObject deckSlotPrefab;
+    private List<DeckSlot> deckSlots = new List<DeckSlot>();
+    public DeckSlot inventorySlot;
+
+
     void Start()
     {
+        for (int i = 0; i < 16; i++)
+        {
+            GameObject instantiatedDeckSlot = Instantiate(deckSlotPrefab);
+            instantiatedDeckSlot.transform.SetParent(deckSlotParent);
+            DeckSlot ds = instantiatedDeckSlot.GetComponent<DeckSlot>();
+            ds.index = i;
+            deckSlots.Add(ds);
+        }
+
         playerMaxHealth = playerHealth;
         UpdateCoinUI();
 
         // Instantiate enemy
-        if (wave > enemies.Length)
+        if (currentWave > enemies.Length)
         {
             return;
         }
@@ -79,14 +114,87 @@ public class TurnBaseManager : MonoBehaviour
         SpawnEnemyForWave();
         UpdatePlayerHealthUI();
 
-        // Start turn base loop
+        // Initialize inventory (empty)
+        tokensInInventory = new List<TokenItem>();
+
+        // Initialize deck with 4x4 grid, all using first index of allTokenAbility
+        tokensInDeck = new TokenItem[4][];
+        for (int i = 0; i < 4; i++)
+        {
+            tokensInDeck[i] = new TokenItem[4];
+            for (int j = 0; j < 4; j++)
+            {
+                tokensInDeck[i][j] = new TokenItem(allTokenAbility[0]);
+                int idx = i * 4 + j;
+                GameObject newDraggable = Instantiate(emptyDraggable);
+                newDraggable.transform.SetParent(deckSlots[idx].transform);
+                newDraggable.transform.localPosition = Vector3.zero;
+                deckSlots[idx].occupied = newDraggable.GetComponent<Draggable>();
+                newDraggable.GetComponent<Image>().sprite = tokensInDeck[i][j].ability.Icon;
+                newDraggable.GetComponent<Draggable>().tokenItem = tokensInDeck[i][j];
+            }
+        }
+        //Start turn base loop
+        StartCoroutine(Shop());
+    }
+    
+    // Adds a token to inventory from SharedAbilityData
+    public void AddTokenToInventory(SharedAbilityData abilityData)
+    {
+        if (abilityData == null) return;
+        TokenItem newToken = new TokenItem(abilityData);
+        tokensInInventory.Add(newToken);
+        // Optionally: update inventory UI here
+    }
+
+    IEnumerator Shop()
+    {
+        // Player do shopping & picking deck
+        shopPanel.Play("shopPanelShow");
+        yield return new WaitUntil(() => shopDone);
+        shopDone = false;
+
+        // Save inventory
+        tokensInInventory.Clear();
+        foreach (Draggable draggable in inventorySlot.occupieds)
+        {
+            if (draggable != null && draggable.tokenItem != null)
+                tokensInInventory.Add(draggable.tokenItem);
+        }
+
+        // Save deck (4x4 grid)
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                int idx = i * 4 + j;
+                if (idx < deckSlots.Count && deckSlots[idx].occupied != null && deckSlots[idx].occupied.tokenItem != null)
+                {
+                    tokensInDeck[i][j] = deckSlots[idx].occupied.tokenItem;
+                }
+                else
+                {
+                    tokensInDeck[i][j] = null;
+                }
+            }
+        }
+
+
+        shopPanel.Play("shopPanelHide");
+        waveReachedText.text = "Wave Reached: " + currentWave.ToString();
         StartCoroutine(PlayerTurn());
+    }
+
+    
+
+    public void ShopDone()
+    {
+        shopDone = true;
     }
 
     IEnumerator PlayerTurn()
     {
-        if (waitingForWaveUI) yield break;
-        if (wave > enemies.Length)
+        if (currentWave > enemies.Length)
         {
             yield break;
         }
@@ -94,7 +202,7 @@ public class TurnBaseManager : MonoBehaviour
         playerTurnDone = false;
         if (slotMachineManager == null)
         {
-            slotMachineManager = FindObjectOfType<SlotMachineManager>();
+            slotMachineManager = FindFirstObjectByType<SlotMachineManager>();
         }
 
         if (slotMachineManager)
@@ -107,14 +215,14 @@ public class TurnBaseManager : MonoBehaviour
         }
 
         yield return new WaitUntil(() => playerTurnDone);
+        playerTurnDone = false;
         yield return new WaitForSeconds(1f);
         StartCoroutine(EnemyTurn());
     }
 
     IEnumerator EnemyTurn()
     {
-        if (waitingForWaveUI) yield break;
-        if (wave > enemies.Length)
+        if (currentWave > enemies.Length)
         {
             yield break;
         }
@@ -131,7 +239,7 @@ public class TurnBaseManager : MonoBehaviour
 
     public void PlayerTakeDamage()
     {
-        if (wave > enemies.Length)
+        if (currentWave > enemies.Length)
         {
             return;
         }
@@ -139,12 +247,14 @@ public class TurnBaseManager : MonoBehaviour
         TextPopupManager.Instance.CreateDamagePopup(
             instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), enemies[wave - 1].damage);
 
-        playerHealth -= enemies[wave - 1].damage;
+        playerHealth -= enemies[currentWave - 1].damage;
         UpdatePlayerHealthUI();
         if (playerHealth <= 0)
         {
+            gameOverPanel.gameObject.SetActive(true);
             gameOverPanel.Play("gameOverShow");
-            waveReachedText.text = "Wave Reached: " + wave.ToString();
+            waveReachedTextWhenGameover.text = "Wave Reached: " + currentWave.ToString();
+            GainCoin(currentWave*100);
             Destroy(player);
         }
     }
@@ -165,7 +275,12 @@ public class TurnBaseManager : MonoBehaviour
             }
 
             AddCoins(enemies[wave - 1].coinReward);
-            if (!waitingForWaveUI)
+            currentWave++;
+            if (currentWave <= enemies.Length)
+            {
+                SpawnEnemyForWave();
+            }
+            else
             {
                 // waitingForWaveUI = true;
                 StopAllCoroutines();
@@ -206,10 +321,9 @@ public class TurnBaseManager : MonoBehaviour
     {
         playerHealth = playerMaxHealth;
         UpdatePlayerHealthUI();
-        instantiatedEnemy =
-            Instantiate(enemies[wave - 1].prefab, enemyParent);
+        instantiatedEnemy = Instantiate(enemies[currentWave - 1].prefab, enemyParent);
         enemyHealthBar = instantiatedEnemy.GetComponentInChildren<Slider>();
-        enemyHealth = enemies[wave - 1].health;
+        enemyHealth = enemies[currentWave - 1].health;
         UpdateEnemyHealthUI();
     }
 
@@ -223,38 +337,21 @@ public class TurnBaseManager : MonoBehaviour
     void UpdateEnemyHealthUI()
     {
         if (!enemyHealthBar) return;
-        if (wave > enemies.Length) return;
-        float enemyMaxHealth = enemies[wave - 1].health;
+        if (currentWave > enemies.Length) return;
+        float enemyMaxHealth = enemies[currentWave - 1].health;
         enemyHealthBar.maxValue = enemyMaxHealth;
         enemyHealthBar.value = Mathf.Clamp(enemyHealth, 0f, enemyMaxHealth);
     }
 
-    void AddCoins(int amount)
+    public void RestartScene()
     {
-        if (amount <= 0) return;
-        coin += amount;
-        UpdateCoinUI();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    void UpdateCoinUI()
+    void GainCoin(int amount)
     {
-        if (!coinText) return;
+        coin += amount;
         coinText.text = "Coin: " + coin.ToString();
     }
-
-    public int Coin => coin;
-
-    public bool CanAfford(int cost)
-    {
-        return cost <= coin;
-    }
-
-    public bool SpendCoins(int cost)
-    {
-        if (cost <= 0) return true;
-        if (!CanAfford(cost)) return false;
-        coin -= cost;
-        UpdateCoinUI();
-        return true;
-    }
+    
 }
