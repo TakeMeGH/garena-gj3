@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2543351708871987885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7656712342186683980}
+  - component: {fileID: 1887899618770576546}
+  m_Layer: 0
+  m_Name: TurnBaseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7656712342186683980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543351708871987885}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887899618770576546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543351708871987885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6ea92e166ac95a4f95313a71ba3a476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  shopPanel: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  waveReachedText: {fileID: 0}
+  waveReachedTextWhenGameover: {fileID: 0}
+  coinText: {fileID: 0}
+  buyPanels:
+  - button: {fileID: 0}
+    icon: {fileID: 0}
+    costText: {fileID: 0}
+    ability: {fileID: 0}
+  - button: {fileID: 0}
+    icon: {fileID: 0}
+    costText: {fileID: 0}
+    ability: {fileID: 0}
+  - button: {fileID: 0}
+    icon: {fileID: 0}
+    costText: {fileID: 0}
+    ability: {fileID: 0}
+  enemies:
+  - prefab: {fileID: 5815725589758524971, guid: 9ab763b7f244ab34eb35fc9b5af4c92b, type: 3}
+    health: 120
+    damage: 175
+    coinReward: 1
+  - prefab: {fileID: 7098167347279625103, guid: ef125c6bb845326439a2f218e704c22b, type: 3}
+    health: 262
+    damage: 175
+    coinReward: 2
+  - prefab: {fileID: 7035789369954215576, guid: 5f6d0e6376653bd4d8bff59d6ef35b84, type: 3}
+    health: 404
+    damage: 175
+    coinReward: 3
+  - prefab: {fileID: 7098167347279625103, guid: 6a5ca5196567544479c7d779d2f7a052, type: 3}
+    health: 546
+    damage: 175
+    coinReward: 4
+  - prefab: {fileID: 5902786259188917344, guid: c2ecf67ddffa2cf4c8ee90402bd710d8, type: 3}
+    health: 688
+    damage: 175
+    coinReward: 7
+  - prefab: {fileID: 7098167347279625103, guid: ef125c6bb845326439a2f218e704c22b, type: 3}
+    health: 830
+    damage: 175
+    coinReward: 8
+  - prefab: {fileID: 7098167347279625103, guid: f3ba43ee0b66a1e4aa7ac1b9e1aecbdc, type: 3}
+    health: 972
+    damage: 175
+    coinReward: 8
+  - prefab: {fileID: 5902786259188917344, guid: e0cb5be23f2dc624fb56e2dba2df7d36, type: 3}
+    health: 1114
+    damage: 233
+    coinReward: 12
+  - prefab: {fileID: 5902786259188917344, guid: 4a554a27ea26fdc4398d5bfedc71dbd9, type: 3}
+    health: 1256
+    damage: 233
+    coinReward: 13
+  - prefab: {fileID: 5902786259188917344, guid: 38444de1d60ef8741861a0d3444b79f7, type: 3}
+    health: 1400
+    damage: 350
+    coinReward: 14
+  playerHealth: 700
+  player: {fileID: 0}
+  batbotPrefab: {fileID: 5815725589758524971, guid: 9ab763b7f244ab34eb35fc9b5af4c92b, type: 3}
+  zombotPrefab: {fileID: 7035789369954215576, guid: 5f6d0e6376653bd4d8bff59d6ef35b84, type: 3}
+  enemyParent: {fileID: 0}
+  slotMachineManager: {fileID: 0}
+  playerHealthBar: {fileID: 0}
+  enemyHealthBar: {fileID: 0}
+  emptyDraggable: {fileID: 9060663580529002173, guid: 494dcea392b7bfe4c9b077b38b6a083e, type: 3}
+  allTokenAbility:
+  - {fileID: 11400000, guid: 5de2d598e58375d4eb0b20a6dd22c2ea, type: 2}
+  - {fileID: 11400000, guid: 1941a7356b38c0b4d89ff544a45672d4, type: 2}
+  - {fileID: 11400000, guid: d4ffdf441c64f974b9e7d295086eca68, type: 2}
+  - {fileID: 11400000, guid: 0e1f0cad7b42b3a4e9b4c9ac6381a3d5, type: 2}
+  - {fileID: 11400000, guid: b48917e28eab14f4ca60604e9994be12, type: 2}
+  - {fileID: 11400000, guid: 052a6effca2e6b44daa4a9cc3d1b172c, type: 2}
+  deckSlotParent: {fileID: 0}
+  deckSlotPrefab: {fileID: 7058891037179103034, guid: 5aca75d901b62784dbac39e9410f9089, type: 3}
+  inventorySlot: {fileID: 0}
