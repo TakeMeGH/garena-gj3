@@ -284,12 +284,15 @@ public class TurnBaseManager : MonoBehaviour
         StartCoroutine(EnemyTurn());
     }
 
-    public void PlayerAttackAnimation(float _totalTurnDamage){
+    public void PlayerAttackAnimation(float _totalTurnDamage)
+    {
         playerParent.Play("PlayerParentAtk"); // in this animation, trigger PlayerTurnDone() (function below)
-        float playerDamageToEnemy = _totalTurnDamage;
+        playerDamageToEnemy = _totalTurnDamage;
     }
 
-    public void PlayerTurnDone(){ // called by PlayerParent's animation trigger
+    public void PlayerTurnDone()
+    {
+        // called by PlayerParent's animation trigger
         playerTurnDone = true;
     }
 
@@ -331,7 +334,6 @@ public class TurnBaseManager : MonoBehaviour
 
     public void EnemyTakeDamage()
     {
-
         if (instantiatedEnemy)
             TextPopupManager.Instance.CreateDamagePopup(
                 instantiatedEnemy.transform.position + new Vector3(0, 2f, 0), playerDamageToEnemy);
@@ -345,18 +347,8 @@ public class TurnBaseManager : MonoBehaviour
                 Destroy(instantiatedEnemy);
             }
 
-            GainCoin(enemies[currentWave - 1].coinReward);
-            currentWave++;
-            if (currentWave <= enemies.Length)
-            {
-                SpawnEnemyForWave();
-            }
-            else
-            {
-                // waitingForWaveUI = true;
-                StopAllCoroutines();
-                StartCoroutine(HandleWaveClear());
-            }
+            StopAllCoroutines();
+            StartCoroutine(HandleWaveClear());
         }
 
         PlayerTurnDone();
@@ -377,6 +369,7 @@ public class TurnBaseManager : MonoBehaviour
         //     selector.Closed -= onClosed;
         // }
         yield return null;
+        GainCoin(enemies[currentWave - 1].coinReward);
         waitingForWaveUI = false;
         currentWave++;
         if (currentWave <= enemies.Length)
