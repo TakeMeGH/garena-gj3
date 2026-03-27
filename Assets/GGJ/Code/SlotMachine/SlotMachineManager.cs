@@ -1,5 +1,7 @@
-﻿using GGJ.Code.Audio;
+using GGJ.Code.Audio;
 using UnityEngine;
+using MoreMountains.Feedbacks;
+using Unity.Cinemachine;
 
 namespace GGJ.Code.SlotMachine
 {
@@ -13,6 +15,9 @@ namespace GGJ.Code.SlotMachine
 
         [SerializeField]
         TurnBaseManager turnBaseManager;
+
+        [SerializeField] CinemachineImpulseSource inputFeedback;
+        [SerializeField] MMF_Player loopShakeFeedback;
 
         int _currentMachineIndex;
         bool _isLastMachine;
@@ -54,11 +59,13 @@ namespace GGJ.Code.SlotMachine
             if (machines == null || machines.Length == 0) return;
             if (_isLastMachine) return;
 
-            if (!UnityEngine.Input.GetKeyDown(stopKey)) return;
+            if (!UnityEngine.Input.GetKeyDown(stopKey) && !UnityEngine.Input.GetKeyDown(KeyCode.Space)) return;
             SlotMachineController currentMachine = machines[_currentMachineIndex];
             if (currentMachine && currentMachine.IsSpinning && currentMachine.IsStopping)
             {
                 currentMachine.HandleStopInput();
+                Debug.Log("enter pressed. camera shake?");
+                inputFeedback?.GenerateImpulse();
             }
         }
 
@@ -70,6 +77,7 @@ namespace GGJ.Code.SlotMachine
             if (_currentMachineIndex == machines.Length - 1)
             {
                 AudioManager.Instance.StopLoopedSfx("SlotMachineRolling");
+                loopShakeFeedback?.StopFeedbacks();
                 _isLastMachine = _currentMachineIndex == machines.Length - 1;
             }
 
@@ -113,7 +121,7 @@ namespace GGJ.Code.SlotMachine
         {
             AudioManager.Instance.PlaySfx("StartSlot");
             AudioManager.Instance.PlayLoopedSfx("SlotMachineRolling");
-
+            loopShakeFeedback?.PlayFeedbacks();
         }
 
         void ApplyTurnDamage()
